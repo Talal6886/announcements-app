@@ -1,0 +1,9 @@
+{
+  "run_prettier": true,
+  "include": [
+    "src"
+  ],
+  "web_server_url": "http://localhost:3000",
+  "editor": "webstorm",
+  "run": "npm run start"
+}

@@ -1,0 +1,61 @@
+// src/screens/LoginScreen.js
+import React, { useState, useContext } from 'react';
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { AnnouncementsContext } from '@components/AnnouncementsContext';
+
+const LoginScreen = ({ navigation }) => {
+    const [username, setUsername] = useState('');
+    const { validUsers, setUser } = useContext(AnnouncementsContext);
+
+    const handleLogin = () => {
+        const user = validUsers.find((u) => u.id === username);
+        if (user) {
+            setUser(user);
+            if (user.role === 'admin') {
+                navigation.navigate('AdminNavigation');
+            } else {
+                navigation.navigate('Announcements');
+            }
+        } else {
+            alert('Invalid username');
+        }
+    };
+
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>Login</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="Enter username"
+                value={username}
+                onChangeText={setUsername}
+            />
+            <Button title="Login" onPress={handleLogin} />
+        </View>
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 16,
+        backgroundColor: '#fff',
+    },
+    title: {
+        fontSize: 24,
+        marginBottom: 16,
+    },
+    input: {
+        height: 40,
+        borderColor: '#ccc',
+        borderWidth: 1,
+        borderRadius: 4,
+        marginBottom: 16,
+        paddingHorizontal: 8,
+        width: '80%',
+    },
+});
+
+export default LoginScreen;

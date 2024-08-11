@@ -1,20 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+// src/App.js
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import AnnouncementsScreen from '@screens/AnnouncementsScreen';
+import AdminScreen from '@screens/AdminScreen';
+import LoginScreen from '@screens/LoginScreen';
+import StatisticsScreen from '@screens/StatisticsScreen';
+import AdminNavigationScreen from '@screens/AdminNavigationScreen';
+import { AnnouncementsProvider } from '@components/AnnouncementsContext';
+import DeleteAnnouncementScreen from '@screens/DeleteAnnouncementScreen';
+import { sharedColors } from '@components/constants';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+const Stack = createStackNavigator();
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const App = () => {
+    return (
+        <AnnouncementsProvider>
+            <NavigationContainer>
+                <Stack.Navigator
+                    initialRouteName="Login"
+                    screenOptions={{
+                        headerShown: true,
+                        headerStyle: {
+                            backgroundColor: sharedColors.primaryColor,
+                        },
+                        headerTintColor: '#fff',
+                        headerTitleStyle: {
+                            fontWeight: 'bold',
+                        },
+                    }}
+                >
+                    <Stack.Screen name="Login" component={LoginScreen} />
+                    <Stack.Screen name="Announcements" component={AnnouncementsScreen} />
+                    <Stack.Screen name="Admin" component={AdminScreen} />
+                    <Stack.Screen name="DeleteAnnouncement" component={DeleteAnnouncementScreen} />
+                    <Stack.Screen name="Statistics" component={StatisticsScreen} />
+                    <Stack.Screen name="AdminNavigation" component={AdminNavigationScreen} />
+                </Stack.Navigator>
+            </NavigationContainer>
+        </AnnouncementsProvider>
+    );
+};
+
+export default App;
