@@ -13,6 +13,7 @@ import EyeOffIcon from '@assets/icons/eyeClose.svg';
 import EyeOpenIcon from '@assets/icons/eyeOpen.svg';
 import PeopleIcon from '@assets/icons/people.svg';
 import StatisticsIcon from '@assets/icons/statis.svg';
+import searchIcon from '@assets/icons/searchIcon.svg';
 import { ViewStyle } from 'react-native';
 
 type IconsProps = {
@@ -28,14 +29,16 @@ const iconMap: { [key: string]: React.FC<SvgProps> } = {
     anb: ANB,
     PinOutline: PinOutline,
     PinFill: PinFill,
-    Check: ChechboxIcon,
+    Checkbox: ChechboxIcon,
     Date: DateIcon,
     Trash: TrashIcon,
     EyeOff: EyeOffIcon,
     EyeOpen: EyeOpenIcon,
     People: PeopleIcon,
     Statistics: StatisticsIcon,
-    Delete: TrashDeleteIcon
+    Delete: TrashDeleteIcon,
+    Check: CheckIcon,
+    search: searchIcon
 };
 
 const Icons: React.FC<IconsProps> = ({ name, width = 24, height = 24, fill = 'white', style }) => {
