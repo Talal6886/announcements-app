@@ -6,6 +6,7 @@ import { Button } from '@components/buttons';
 import { screenHeight, screenWidth, sharedColors } from '@components/constants';
 import * as ImagePicker from 'expo-image-picker';
 import { Calendar } from 'react-native-calendars';
+import Icons from "@components/icons";
 
 const AdminScreen = ({ navigation }) => {
   const [announcement, setAnnouncement] = useState('');
@@ -80,7 +81,6 @@ const AdminScreen = ({ navigation }) => {
                     multiline
                 />
               </View>
-
               <Text style={styles.dateText}>Select Date</Text>
               <Calendar
                   onDayPress={(day) => setExpiryDate(day.dateString)}

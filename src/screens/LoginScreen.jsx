@@ -2,6 +2,8 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { AnnouncementsContext } from '@components/AnnouncementsContext';
+import Icons from "@components/icons";
+import {sharedColors} from "@components/constants";
 
 const LoginScreen = ({ navigation }) => {
     const [username, setUsername] = useState('');
@@ -23,6 +25,7 @@ const LoginScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+            <Icons name='anb' width={50} height={50} fill={sharedColors.primaryColor} />
             <Text style={styles.title}>Login</Text>
             <TextInput
                 style={styles.input}

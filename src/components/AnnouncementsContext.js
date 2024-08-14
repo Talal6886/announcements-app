@@ -146,7 +146,7 @@ export const AnnouncementsProvider = ({ children }) => {
     const [userPinnedAnnouncements, setUserPinnedAnnouncements] = useState({});
 
     const validUsers = [
-        { id: 'admin', name: 'Admin', role: 'admin' },
+        { id: '', name: 'Admin', role: 'admin' },
         { id: 'employee1', name: 'Employee 1', role: 'employee' },
         { id: 'employee2', name: 'Employee 2', role: 'employee' },
         { id: 'employee3', name: 'Employee 3', role: 'employee' },

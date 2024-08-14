@@ -1,12 +1,12 @@
-// src/components/AnnouncementCard.js
+// AnnouncementCard.js
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { Icons } from '@components/icons';
+import Icons from '@components/icons';
 import { sharedColors } from '@components/constants';
 
-const AnnouncementCard = ({ title, description, expireDate, image, pinned, onPinPress, onCheckPress, isChecked }) => {
+const AnnouncementCard = ({ title, description,remainingDays, expireDate, image, pinned, onPinPress, onCheckPress, isChecked }) => {
     const [showFullDescription, setShowFullDescription] = useState(false);
-
+    const [read, setRead] = useState(false);
     const getImageSource = () => {
         if (typeof image === 'number') {
             return image;
@@ -18,6 +18,7 @@ const AnnouncementCard = ({ title, description, expireDate, image, pinned, onPin
         setShowFullDescription(!showFullDescription);
         if (!isChecked) {
             onCheckPress();
+            setRead(true);
         }
     };
 
@@ -29,9 +30,9 @@ const AnnouncementCard = ({ title, description, expireDate, image, pinned, onPin
                 <View style={styles.icons}>
                     <TouchableOpacity onPress={onPinPress}>
                         {pinned ? (
-                            <Icons nameIcon={'pin'} sizeIcon={28} colorIcon={sharedColors.primaryColor} />
+                            <Icons name={'PinFill'} width={20} height={20}  fill={sharedColors.primaryColor} />
                         ) : (
-                            <Icons nameIcon={'pin-outline'} sizeIcon={28} colorIcon={sharedColors.primaryColor} />
+                            <Icons name={'PinOutline'} width={20} height={20} fill={sharedColors.primaryColor} />
                         )}
                     </TouchableOpacity>
                 </View>
@@ -44,7 +45,15 @@ const AnnouncementCard = ({ title, description, expireDate, image, pinned, onPin
                     {showFullDescription ? 'Show less' : 'Show more'}
                 </Text>
             </TouchableOpacity>
-            <Text style={styles.expireDate}>Expires in {expireDate} days</Text>
+            <View style={styles.contentRow}>
+                <Text style={styles.expireDate}>Expires in {remainingDays} days on {expireDate}</Text>
+            <View style={styles.markRead}>
+            {isChecked &&
+                <Icons name={'Check'} width={20} height={20}  fill={sharedColors.primaryColor} />
+
+            }
+            </View>
+            </View>
         </View>
     );
 };
@@ -90,7 +99,7 @@ const styles = StyleSheet.create({
     expireDate: {
         padding: 8,
         fontSize: 12,
-        color: 'black',
+        color: '#EF4A4A',
     },
     icons: {
         alignItems: 'center',
@@ -101,6 +110,12 @@ const styles = StyleSheet.create({
     contentRow: {
         flexDirection: 'row',
     },
+    markRead:{
+        alignItems: 'center',
+        position:"absolute",
+        marginLeft: 312.5,
+    },
+
 });
 
 export default AnnouncementCard;

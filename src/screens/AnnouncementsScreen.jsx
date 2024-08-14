@@ -3,10 +3,10 @@ import React, { useContext, useState, useEffect } from 'react';
 import { View, StyleSheet, SafeAreaView, ScrollView, Text, TextInput, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { AnnouncementsContext } from '@components/AnnouncementsContext';
-import AnnouncementCard from '@components/announcementCard';
+import AnnouncementCard from '@components/AnnouncementCard';
 import { screenHeight, screenWidth, sharedColors } from '@components/constants';
-import { Icons } from "@components/icons";
 import { Tabs } from '@components/Tabs';
+import Icons from "@components/icons";
 
 const AnnouncementsScreen = () => {
     const { announcements, togglePinAnnouncement, markAnnouncementAsRead, user, userPinnedAnnouncements } = useContext(AnnouncementsContext);
@@ -61,11 +61,12 @@ const AnnouncementsScreen = () => {
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
                 <View style={styles.containerRow}>
-                    <Icons
-                        nameIcon={'text-search'}
-                        sizeIcon={35}
-                        colorIcon={sharedColors.primaryColor}
-                    />
+                    {/*<Icons
+                        name={'search'}
+                        width={35}
+                        height={35}
+                        fill={sharedColors.primaryColor}
+                    />*/}
                     <TextInput
                         style={styles.searchBar}
                         placeholder="Search announcements..."
@@ -89,7 +90,8 @@ const AnnouncementsScreen = () => {
                             <AnnouncementCard
                                 title={item.title}
                                 description={item.description}
-                                expireDate={calculateRemainingDays(item.expiryDate)}
+                                remainingDays={calculateRemainingDays(item.expiryDate)}
+                                expireDate={new Date(item.expiryDate).toLocaleDateString("en-US")}
                                 image={item.image}
                                 pinned={userPins.includes(item.id)}
                                 onPinPress={() => handlePinPress(item.id)}

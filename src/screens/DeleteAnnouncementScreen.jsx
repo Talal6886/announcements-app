@@ -5,7 +5,7 @@ import { AnnouncementsContext } from '@components/AnnouncementsContext';
 import { Button } from '@components/buttons';
 import { Tabs } from '@components/Tabs';
 import { screenHeight, screenWidth, sharedColors } from '@components/constants';
-import {Icons} from "@components/icons";
+import Icons from "@components/icons";
 
 const DeleteAnnouncementScreen = () => {
     const { announcements, removeAnnouncement } = useContext(AnnouncementsContext);
@@ -31,9 +31,10 @@ const DeleteAnnouncementScreen = () => {
                         <View style={styles.iconContainer}>
                             <TouchableOpacity onPress={() => removeAnnouncement(announcement.id)}>
                                 <Icons
-                                nameIcon={'delete'}
-                                sizeIcon={35}
-                                colorIcon={'red'}
+                                name={'Delete'}
+                                width={30}
+                                height={30}
+                                fill={'red'}
                                 />
                             </TouchableOpacity>
                         </View>

@@ -6,7 +6,8 @@ import AdminScreen from '@screens/AdminScreen';
 import StatisticsScreen from '@screens/StatisticsScreen';
 import DeleteAnnouncementScreen from '@screens/DeleteAnnouncementScreen';
 import { sharedColors } from '@components/constants';
-import {Icons} from "@components/icons";
+import Icons from "@components/icons";
+
 
 const Tab = createBottomTabNavigator();
 
@@ -18,19 +19,19 @@ const AdminNavigationScreen = () => {
                     let iconName;
 
                     if (route.name === 'Announcements') {
-                        iconName = 'home';
+                        iconName = 'Home';
                     } else if (route.name === 'Add') {
-                        iconName = 'clipboard-plus';
+                        iconName = 'Date';
                     } else if (route.name === 'Delete') {
-                        iconName = 'trash-can';
+                        iconName = 'Trash';
                     } else if (route.name === 'Statistics') {
-                        iconName = 'chart-box-outline';
+                        iconName = 'Statistics';
                     }
 
-                    return <Icons nameIcon={iconName} sizeIcon={size} colorIcon={color} />;
+                    return <Icons name={iconName} width={28} height={28} fill={color} />;
                 },
                 tabBarActiveTintColor: sharedColors.primaryColor,
-                tabBarInactiveTintColor: 'gray',
+                tabBarInactiveTintColor: "#81B9ED",
             })}
         >
             <Tab.Screen name="Announcements" component={AnnouncementsScreen} />
@@ -42,3 +43,4 @@ const AdminNavigationScreen = () => {
 };
 
 export default AdminNavigationScreen;
+
