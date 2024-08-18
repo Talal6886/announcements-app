@@ -1,9 +1,10 @@
 // src/screens/LoginScreen.js
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import {View, Text, TextInput, Button, StyleSheet, Image} from 'react-native';
 import { AnnouncementsContext } from '@components/AnnouncementsContext';
 import Icons from "@components/icons";
 import {sharedColors} from "@components/constants";
+
 
 const LoginScreen = ({ navigation }) => {
     const [username, setUsername] = useState('');
@@ -25,8 +26,9 @@ const LoginScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+
             <Icons name='anb' width={50} height={50} fill={sharedColors.primaryColor} />
-            <Text style={styles.title}>Login</Text>
+                <Text style={styles.title}>Login</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Enter username"
@@ -34,6 +36,7 @@ const LoginScreen = ({ navigation }) => {
                 onChangeText={setUsername}
             />
             <Button title="Login" onPress={handleLogin} />
+
         </View>
     );
 };
@@ -54,8 +57,8 @@ const styles = StyleSheet.create({
         height: 40,
         borderColor: '#ccc',
         borderWidth: 1,
-        borderRadius: 4,
         marginBottom: 16,
+        borderRadius: 4,
         paddingHorizontal: 8,
         width: '80%',
     },

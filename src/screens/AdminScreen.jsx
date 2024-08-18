@@ -1,5 +1,15 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, StyleSheet, ScrollView, TouchableWithoutFeedback, Keyboard, SafeAreaView } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  SafeAreaView,
+  Platform, KeyboardAvoidingView
+} from 'react-native';
 import { Tabs } from '@components/Tabs';
 import { AnnouncementsContext } from '@components/AnnouncementsContext';
 import { Button } from '@components/buttons';
@@ -53,8 +63,12 @@ const AdminScreen = ({ navigation }) => {
   );
 
   return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <SafeAreaView style={{ flex: 1 }}>
+          <KeyboardAvoidingView
+              style={{ flex: 1 }}
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+              keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+          >
           <View style={styles.container}>
             <Text style={styles.label}>Add Announcement</Text>
             <View style={styles.cardContainer}>
@@ -106,8 +120,9 @@ const AdminScreen = ({ navigation }) => {
               />
             </ScrollView>
           </View>
+          </KeyboardAvoidingView>
         </SafeAreaView>
-      </TouchableWithoutFeedback>
+
   );
 };
 

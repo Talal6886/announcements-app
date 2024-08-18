@@ -1,20 +1,31 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { View, StyleSheet, SafeAreaView, ScrollView, Text, TextInput, FlatList, TouchableOpacity, Animated } from 'react-native';
+import React, { useContext, useState, useEffect, useRef } from 'react';
+import {
+    View,
+    StyleSheet,
+    SafeAreaView,
+    Text,
+    TextInput,
+    FlatList,
+    Animated,
+    ScrollView,
+    KeyboardAvoidingView, Platform, Image, ImageBackground
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { AnnouncementsContext } from '@components/AnnouncementsContext';
 import AnnouncementCard from '@components/AnnouncementCard';
 import { screenHeight, screenWidth, sharedColors } from '@components/constants';
 import { Tabs } from '@components/Tabs';
 import Icons from "@components/icons";
+import BackGroundImage from '@assets/images/announcements.png';
 
 const AnnouncementsScreen = () => {
     const { announcements, togglePinAnnouncement, markAnnouncementAsRead, user, userPinnedAnnouncements } = useContext(AnnouncementsContext);
     const [activeTab, setActiveTab] = useState(0);
     const [searchQuery, setSearchQuery] = useState('');
-    const [isSearchBarVisible, setIsSearchBarVisible] = useState(false);
-    const [scrollY] = useState(new Animated.Value(0)); // Add Animated.Value for scroll position
     const navigation = useNavigation();
     const tabOptions = ['HR', 'IT', 'Retails', 'Security'];
+
+    const scrollY = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
         if (!user) {
@@ -41,7 +52,6 @@ const AnnouncementsScreen = () => {
             return isPinnedB - isPinnedA;
         });
 
-
     const calculateRemainingDays = (expiryDate) => {
         const today = new Date();
         const expiry = new Date(expiryDate);
@@ -57,72 +67,55 @@ const AnnouncementsScreen = () => {
         markAnnouncementAsRead(id, user.id);
     };
 
-    const handleSearchIconPress = () => {
-        setIsSearchBarVisible(true);
-    };
-
-    const handleScroll = (event) => {
-        Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
-            useNativeDriver: false,
-        })(event);
-    };
-
-    const searchBarTranslate = scrollY.interpolate({
-        inputRange: [0, 50],
-        outputRange: [0, -50],
-        extrapolate: 'clamp',
-    });
-
-    const tabsTranslate = scrollY.interpolate({
-        inputRange: [0, 50],
-        outputRange: [0, -50],
-        extrapolate: 'clamp',
-    });
-
     const userPins = userPinnedAnnouncements[user.id] || [];
+
+    const headerHeight = scrollY.interpolate({
+        inputRange: [0, 100],
+        outputRange: [100, 0],
+        extrapolate: 'clamp',
+    });
+
+    const searchBarOpacity = scrollY.interpolate({
+        inputRange: [0, 50],
+        outputRange: [1, 0],
+        extrapolate: 'clamp',
+    });
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
+
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+            >
             <View style={styles.container}>
-                <Animated.View
-                    style={[
-                        styles.searchBarContainer,
-                        { transform: [{ translateY: searchBarTranslate }] },
-                    ]}
-                >
-                    {!isSearchBarVisible ? (
-                        <TouchableOpacity onPress={handleSearchIconPress}>
-                            <Icons
-                                name={'anb'}
-                                width={35}
-                                height={35}
-                                fill={sharedColors.primaryColor}
-                            />
-                        </TouchableOpacity>
-                    ) : (
+
+                <Animated.View style={[styles.header, { height: headerHeight }]}>
+                    <Animated.View style={[styles.searchBarContainer, { opacity: searchBarOpacity }]}>
+                        <Icons
+                            name={'search'}
+                            width={16}
+                            height={16}
+                            fill={sharedColors.primaryColor}
+                            style={styles.searchIcon}
+                        />
                         <TextInput
                             style={styles.searchBar}
-                            placeholder="Search announcements..."
+                            placeholder="Search"
                             value={searchQuery}
                             onChangeText={setSearchQuery}
                         />
-                    )}
+                    </Animated.View>
+                    <Animated.View style={{ opacity: searchBarOpacity }}>
+                        <ScrollView
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                        >
+                            <Tabs options={tabOptions} activeTab={activeTab} setActiveTab={setActiveTab} />
+                        </ScrollView>
+                    </Animated.View>
                 </Animated.View>
-
-                <Animated.View
-                    style={[
-                        styles.tabsContainer,
-                        { transform: [{ translateY: tabsTranslate }] },
-                    ]}
-                >
-                    <ScrollView
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                    >
-                        <Tabs options={tabOptions} activeTab={activeTab} setActiveTab={setActiveTab} />
-                    </ScrollView>
-                </Animated.View>
-
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     data={filteredAnnouncements}
@@ -136,7 +129,7 @@ const AnnouncementsScreen = () => {
                                 image={item.image}
                                 pinned={userPins.includes(item.id)}
                                 onPinPress={() => handlePinPress(item.id)}
-                                onCheckPress={() => handleCheckPress(item.id)} // No longer needed
+                                onCheckPress={() => handleCheckPress(item.id)}
                                 isChecked={item.checkedUsers.includes(user.id)}
                             />
                         </View>
@@ -144,9 +137,14 @@ const AnnouncementsScreen = () => {
                     keyExtractor={(item) => item.id.toString()}
                     ItemSeparatorComponent={<View style={{ height: 16 }} />}
                     ListEmptyComponent={emptyMessage}
-                    onScroll={handleScroll}
+                    onScroll={Animated.event(
+                        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                        { useNativeDriver: false }
+                    )}
                 />
             </View>
+            </KeyboardAvoidingView>
+
         </SafeAreaView>
     );
 };
@@ -163,29 +161,34 @@ const styles = StyleSheet.create({
         padding: 16,
         backgroundColor: '#f9f9f9',
     },
+    header: {
+        overflow: 'hidden',
+    },
     searchBarContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        backgroundColor: '#fff',
+        borderColor: '#0b5ada',
+        borderWidth: 1,
+        borderRadius: 5,
+        paddingHorizontal: 8,
         marginBottom: 8,
-
+        height: 40,
     },
-    tabsContainer: {
-        backgroundColor: '#f9f9f9',
-        marginBottom: 8,
+    searchIcon: {
+        marginRight: 8,
     },
     searchBar: {
-        height: 40,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 4,
-        paddingHorizontal: 8,
-        width: screenWidth - 32,
+        flex: 1,
+        fontSize:16,
+        height: '100%',
+        color: '#000',
 
     },
     itemsContainer: {
         flexGrow: 1,
-
     },
+
 });
 
 export default AnnouncementsScreen;

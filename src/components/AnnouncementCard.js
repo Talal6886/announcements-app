@@ -49,7 +49,7 @@ const AnnouncementCard = ({ title, description,remainingDays, expireDate, image,
                 <Text style={styles.expireDate}>Expires in {remainingDays} days on {expireDate}</Text>
             <View style={styles.markRead}>
             {isChecked &&
-                <Icons name={'Check'} width={20} height={20}  fill={sharedColors.primaryColor} />
+                <Icons name={'Check'} width={15} height={15}  fill={sharedColors.primaryColor} />
 
             }
             </View>
