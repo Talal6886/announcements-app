@@ -16,7 +16,7 @@ import AnnouncementCard from '@components/AnnouncementCard';
 import { screenHeight, screenWidth, sharedColors } from '@components/constants';
 import { Tabs } from '@components/Tabs';
 import Icons from "@components/icons";
-import BackGroundImage from '@assets/images/announcements.png';
+import BackGroundImage from '@assets/icons/BackGroundImage.svg';
 
 const AnnouncementsScreen = () => {
     const { announcements, togglePinAnnouncement, markAnnouncementAsRead, user, userPinnedAnnouncements } = useContext(AnnouncementsContext);
@@ -90,9 +90,23 @@ const AnnouncementsScreen = () => {
                 keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
             >
             <View style={styles.container}>
-
+                <Icons name={'Image'} width={screenWidth} height={screenHeight * 0.60} fill={sharedColors.primaryColor} style={{position: 'absolute',
+                    top: 0,
+                    left: 0,}}/>
+                <Icons name={'ImageBottom'} width={screenWidth} height={screenHeight * 0.895} fill={sharedColors.primaryColor} style={{position: 'absolute',
+                    top: 0,
+                    left: 0,}}/>
                 <Animated.View style={[styles.header, { height: headerHeight }]}>
                     <Animated.View style={[styles.searchBarContainer, { opacity: searchBarOpacity }]}>
+                        <View style={styles.filterIcon}>
+                        <Icons
+                            name={'Filter'}
+                            width={16}
+                            height={16}
+                            fill={sharedColors.primaryColor}
+                            style={styles.searchIcon}
+                        />
+                        </View>
                         <Icons
                             name={'search'}
                             width={16}
@@ -116,6 +130,7 @@ const AnnouncementsScreen = () => {
                         </ScrollView>
                     </Animated.View>
                 </Animated.View>
+
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     data={filteredAnnouncements}
@@ -151,7 +166,14 @@ const AnnouncementsScreen = () => {
 
 const emptyMessage = () => {
     return (
-        <Text>No announcements found.</Text>
+        <View style={styles.container}>
+        <Icons name={'NoResults'} width={150} height={150} fill={sharedColors.primaryColor} style={{position: 'absolute',
+            top: 100,
+            left: 100,}}/>
+        <Text style={{position: 'absolute',
+            top: 300,
+            left: 100,}}>No announcements found.</Text>
+        </View>
     );
 };
 
@@ -174,9 +196,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         marginBottom: 8,
         height: 40,
+
     },
     searchIcon: {
         marginRight: 8,
+    },
+    filterIcon: {
+        position:'absolute',
+        marginLeft: 315,
     },
     searchBar: {
         flex: 1,
@@ -184,9 +211,24 @@ const styles = StyleSheet.create({
         height: '100%',
         color: '#000',
 
+
     },
     itemsContainer: {
         flexGrow: 1,
+    },
+    iconBackground: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+    },
+    overlayContent: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 1,
+    },
+    text: {
+        color: 'white',
+        fontWeight: 'bold',
     },
 
 });

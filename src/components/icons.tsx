@@ -14,6 +14,10 @@ import EyeOpenIcon from '@assets/icons/eyeOpen.svg';
 import PeopleIcon from '@assets/icons/people.svg';
 import StatisticsIcon from '@assets/icons/statis.svg';
 import searchIcon from '@assets/icons/searchIcon.svg';
+import FilterIcon from '@assets/icons/Filter.svg';
+import ImageIcon from '@assets/icons/BackGroundImage.svg';
+import ImageBottomIcon from '@assets/icons/BackgrounImageBottom.svg';
+import NoResultsIcon from '@assets/icons/NoResult.svg';
 import { ViewStyle } from 'react-native';
 
 type IconsProps = {
@@ -38,7 +42,11 @@ const iconMap: { [key: string]: React.FC<SvgProps> } = {
     Statistics: StatisticsIcon,
     Delete: TrashDeleteIcon,
     Check: CheckIcon,
-    search: searchIcon
+    search: searchIcon,
+    Filter: FilterIcon,
+    Image: ImageIcon,
+    ImageBottom: ImageBottomIcon,
+    NoResults: NoResultsIcon,
 };
 
 const Icons: React.FC<IconsProps> = ({ name, width = 24, height = 24, fill = 'white', style }) => {

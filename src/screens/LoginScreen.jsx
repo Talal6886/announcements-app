@@ -1,9 +1,11 @@
 // src/screens/LoginScreen.js
 import React, { useState, useContext } from 'react';
-import {View, Text, TextInput, Button, StyleSheet, Image} from 'react-native';
+import {View, Text, TextInput, Button, StyleSheet, Image, ImageBackground, SafeAreaView} from 'react-native';
 import { AnnouncementsContext } from '@components/AnnouncementsContext';
 import Icons from "@components/icons";
-import {sharedColors} from "@components/constants";
+import {screenHeight, screenWidth, sharedColors} from "@components/constants";
+import BackGroundImage from "@assets/icons/BackGroundImage.svg";
+import logo from "@assets/images/Logo.png";
 
 
 const LoginScreen = ({ navigation }) => {
@@ -26,20 +28,25 @@ const LoginScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-
-            <Icons name='anb' width={50} height={50} fill={sharedColors.primaryColor} />
+            <Icons name='Image' width={screenWidth} height={screenHeight * 0.9} fill={sharedColors.primaryColor} style={{position: 'absolute',
+                top: 0,
+                left: 0,}}/>
+            <View style={{justifyContent: 'center',
+                alignItems: 'center',
+                zIndex: 1,}}>
                 <Text style={styles.title}>Login</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Enter username"
-                value={username}
-                onChangeText={setUsername}
-            />
-            <Button title="Login" onPress={handleLogin} />
-
+                <TextInput
+                    style={styles.input}
+                    placeholder="Enter username"
+                    value={username}
+                    onChangeText={setUsername}
+                />
+                <Button title="Login" onPress={handleLogin} />
+            </View>
         </View>
     );
 };
+
 
 const styles = StyleSheet.create({
     container: {
@@ -48,6 +55,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 16,
         backgroundColor: '#fff',
+    },
+    image: {
+        flex: 1,
+        justifyContent: 'center',
     },
     title: {
         fontSize: 24,
