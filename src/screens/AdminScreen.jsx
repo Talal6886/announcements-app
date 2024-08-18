@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -8,13 +8,14 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   SafeAreaView,
-} from "react-native";
-import { Tabs } from "@components/Tabs";
-import { AnnouncementsContext } from "@components/AnnouncementsContext";
-import { Button } from "@components/buttons";
-import { screenHeight, screenWidth, sharedColors } from "@components/constants";
-import * as ImagePicker from "expo-image-picker";
-import { Calendar } from "react-native-calendars";
+  Platform, KeyboardAvoidingView
+} from 'react-native';
+import { Tabs } from '@components/Tabs';
+import { AnnouncementsContext } from '@components/AnnouncementsContext';
+import { Button } from '@components/buttons';
+import { screenHeight, screenWidth, sharedColors } from '@components/constants';
+import * as ImagePicker from 'expo-image-picker';
+import { Calendar } from 'react-native-calendars';
 import Icons from "@components/icons";
 import logo from "@assets/images/Logo.png";
 import { addAnnouncements } from "src/services/announcementAPI";
@@ -71,70 +72,66 @@ const AdminScreen = ({ navigation }) => {
   );
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <View style={styles.container}>
-          <Text style={styles.label}>Add Announcement</Text>
-          <View style={styles.cardContainer}>
-            <ScrollView
-              showsHorizontalScrollIndicator={false}
-              horizontal={true}
-            >
-              <Tabs
-                options={tabOptions}
-                activeTab={category}
-                setActiveTab={setCategory}
+        <SafeAreaView style={{ flex: 1 }}>
+          <KeyboardAvoidingView
+              style={{ flex: 1 }}
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+              keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+          >
+          <View style={styles.container}>
+            <Text style={styles.label}>Add Announcement</Text>
+            <View style={styles.cardContainer}>
+              <ScrollView
+                  showsHorizontalScrollIndicator={false}
+                  horizontal={true}>
+                <Tabs options={tabOptions} activeTab={category} setActiveTab={setCategory} />
+              </ScrollView>
+            </View>
+            <ScrollView>
+              <View style={styles.inputContainer}>
+                <TextInput
+                    style={styles.input}
+                    value={announcement}
+                    onChangeText={setAnnouncement}
+                    placeholder="Enter announcement"
+                    maxLength={40}
+                />
+                <TextInput
+                    style={[styles.input, { height: 100 }]}
+                    value={description}
+                    onChangeText={setDescription}
+                    placeholder="Enter description"
+                    multiline
+                />
+              </View>
+              <Text style={styles.dateText}>Select Date</Text>
+              <Calendar
+                  onDayPress={(day) => setExpiryDate(day.dateString)}
+                  markedDates={{
+                    [expiryDate]: { selected: true, marked: true, selectedColor: 'blue' },
+                  }}
+              />
+
+              <Text style={styles.dateText}>Expiry Date: {expiryDate}</Text>
+
+              <Button
+                  style={styles.button}
+                  textButton={"Pick Image"}
+                  textStyle={styles.text}
+                  onPress={pickImage}
+              />
+
+              <Button
+                  style={styles.button}
+                  textButton={"Add Announcement"}
+                  textStyle={styles.text}
+                  onPress={handleAddAnnouncement}
               />
             </ScrollView>
           </View>
-          <ScrollView>
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                value={announcement}
-                onChangeText={setAnnouncement}
-                placeholder='Enter announcement'
-                maxLength={40}
-              />
-              <TextInput
-                style={[styles.input, { height: 100 }]}
-                value={description}
-                onChangeText={setDescription}
-                placeholder='Enter description'
-                multiline
-              />
-            </View>
-            <Text style={styles.dateText}>Select Date</Text>
-            <Calendar
-              onDayPress={(day) => setExpiryDate(day.dateString)}
-              markedDates={{
-                [expiryDate]: {
-                  selected: true,
-                  marked: true,
-                  selectedColor: "blue",
-                },
-              }}
-            />
+          </KeyboardAvoidingView>
+        </SafeAreaView>
 
-            <Text style={styles.dateText}>Expiry Date: {expiryDate}</Text>
-
-            <Button
-              style={styles.button}
-              textButton={"Pick Image"}
-              textStyle={styles.text}
-              onPress={pickImage}
-            />
-
-            <Button
-              style={styles.button}
-              textButton={"Add Announcement"}
-              textStyle={styles.text}
-              onPress={handleAddAnnouncement}
-            />
-          </ScrollView>
-        </View>
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
   );
 };
 

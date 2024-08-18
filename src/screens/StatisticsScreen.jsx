@@ -59,7 +59,8 @@ const StatisticsScreen = () => {
                                     <Text style={styles.statText}>{checkedCount}</Text>
                                 </View>
                                 <View style={styles.iconWithText}>
-                                    <Progress.Circle progress={progress} size={100} color="#2196F3" showsText={true} textStyle={{ fontWeight: 'bold', marginBottom: 12 }} />
+                                    <Progress.Circle progress={progress} size={100} color="#0072DA"/>
+                                    <Text style={styles.progressNum}> {Math.round(progress * 100)}%</Text>
                                     <Text style={styles.progressText}>Completed</Text>
                                 </View>
                             </View>
@@ -109,11 +110,18 @@ const styles = StyleSheet.create({
         marginLeft: 8,
     },
     progressText: {
-        marginTop: 55,
+        marginTop: 45,
         fontSize: 14,
-        color: "#2196F3",
+        color: "#0072DA",
         position: "absolute",
     },
+    progressNum: {
+        marginTop: 25,
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: "#0072DA",
+        position: "absolute",
+    }
 });
 
 export default StatisticsScreen;

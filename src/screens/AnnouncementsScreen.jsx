@@ -1,41 +1,37 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import {
-  View,
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-  Animated,
-} from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { AnnouncementsContext } from "@components/AnnouncementsContext";
-import AnnouncementCard from "@components/AnnouncementCard";
-import { screenHeight, screenWidth, sharedColors } from "@components/constants";
-import { Tabs } from "@components/Tabs";
+    View,
+    StyleSheet,
+    SafeAreaView,
+    Text,
+    TextInput,
+    FlatList,
+    Animated,
+    ScrollView,
+    KeyboardAvoidingView, Platform, Image, ImageBackground
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { AnnouncementsContext } from '@components/AnnouncementsContext';
+import AnnouncementCard from '@components/AnnouncementCard';
+import { screenHeight, screenWidth, sharedColors } from '@components/constants';
+import { Tabs } from '@components/Tabs';
 import Icons from "@components/icons";
-import { getAnnouncements } from "src/services/announcementAPI";
-import logo from "@assets/images/Logo.png";
-
-id = "";
+import BackGroundImage from '@assets/images/announcements.png';
 
 const AnnouncementsScreen = () => {
-  const {
-    announcements,
-    togglePinAnnouncement,
-    markAnnouncementAsRead,
-    user,
-    userPinnedAnnouncements,
-  } = useContext(AnnouncementsContext);
-  const [activeTab, setActiveTab] = useState(0);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isSearchBarVisible, setIsSearchBarVisible] = useState(false);
-  const [scrollY] = useState(new Animated.Value(0)); // Add Animated.Value for scroll position
-  const navigation = useNavigation();
-  const tabOptions = ["HR", "IT", "Retails", "Security"];
-  
+    const { announcements, togglePinAnnouncement, markAnnouncementAsRead, user, userPinnedAnnouncements } = useContext(AnnouncementsContext);
+    const [activeTab, setActiveTab] = useState(0);
+    const [searchQuery, setSearchQuery] = useState('');
+    const navigation = useNavigation();
+    const tabOptions = ['HR', 'IT', 'Retails', 'Security'];
+
+    const scrollY = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        if (!user) {
+            navigation.navigate('Login');
+        }
+    }, [user]);
 
   const [APIannouncements, setAPIannouncements] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -53,24 +49,11 @@ const AnnouncementsScreen = () => {
       );
       setAPIannouncements(response);
 
-      let categoriesFiltered = [];
-
-      response.forEach((element) => {
-        categoriesFiltered.push(element.category);
-        console.log(
-          `[HomeScreen] [fetchAnnouncement] response.category ${JSON.stringify(
-            element.category
-          )}`
-        );
-      });
-
-      console.log(
-        `[HomeScreen] [fetchAnnouncement] categoriesFiltered ${JSON.stringify(
-          categoriesFiltered
-        )}`
-      );
-      // TODO: Check this !!
-      return categoriesFiltered;
+    const calculateRemainingDays = (expiryDate) => {
+        const today = new Date();
+        const expiry = new Date(expiryDate);
+        const timeDiff = expiry - today;
+        return Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
     };
     fetchAnnouncement();
   }, [user]);
@@ -94,115 +77,86 @@ const AnnouncementsScreen = () => {
     return isPinnedB - isPinnedA;
   });
 
-  const calculateRemainingDays = (expiryDate) => {
-    const today = new Date();
-    const expiry = new Date(expiryDate);
-    const timeDiff = expiry - today;
-    return Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-  };
+    const userPins = userPinnedAnnouncements[user.id] || [];
 
-  const handlePinPress = (id) => {
-    togglePinAnnouncement(id, user.id);
-  };
+    const headerHeight = scrollY.interpolate({
+        inputRange: [0, 100],
+        outputRange: [100, 0],
+        extrapolate: 'clamp',
+    });
 
-  const handleCheckPress = (id) => {
-    markAnnouncementAsRead(id, user.id);
-  };
+    const searchBarOpacity = scrollY.interpolate({
+        inputRange: [0, 50],
+        outputRange: [1, 0],
+        extrapolate: 'clamp',
+    });
 
-  const handleSearchIconPress = () => {
-    setIsSearchBarVisible(true);
-  };
+    return (
+        <SafeAreaView style={{ flex: 1 }}>
 
-  const handleScroll = (event) => {
-    Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
-      useNativeDriver: false,
-    })(event);
-  };
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+            >
+            <View style={styles.container}>
 
-  const searchBarTranslate = scrollY.interpolate({
-    inputRange: [0, 50],
-    outputRange: [0, -50],
-    extrapolate: "clamp",
-  });
-
-  const tabsTranslate = scrollY.interpolate({
-    inputRange: [0, 50],
-    outputRange: [0, -50],
-    extrapolate: "clamp",
-  });
-
-  const userPins = userPinnedAnnouncements[user.id] || [];
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <Animated.View
-          style={[
-            styles.searchBarContainer,
-            { transform: [{ translateY: searchBarTranslate }] },
-          ]}
-        >
-          {!isSearchBarVisible ? (
-            <TouchableOpacity onPress={handleSearchIconPress}>
-              <Icons
-                name={"anb"}
-                width={35}
-                height={35}
-                fill={sharedColors.primaryColor}
-              />
-            </TouchableOpacity>
-          ) : (
-            <TextInput
-              style={styles.searchBar}
-              placeholder='Search announcements...'
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-            />
-          )}
-        </Animated.View>
-
-        <Animated.View
-          style={[
-            styles.tabsContainer,
-            { transform: [{ translateY: tabsTranslate }] },
-          ]}
-        >
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <Tabs
-              options={tabOptions}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-            />
-          </ScrollView>
-        </Animated.View>
-
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={filteredAnnouncements}
-          renderItem={({ item }) => (
-            <View style={styles.itemsContainer}>
-              <AnnouncementCard
-                title={item.title}
-                description={item.description}
-                remainingDays={calculateRemainingDays(item.expiredate)}
-                expireDate={new Date(item.expiryDate).toLocaleDateString(
-                  "en-US"
-                )}
-                image={logo}
-                pinned={userPins.includes(Number(item.id))}
-                onPinPress={() => handlePinPress(Number(item.id))}
-                onCheckPress={() => handleCheckPress(Number(item.id))}
-                //isChecked={item.checkedUsers.includes(user.id)}
-              />
+                <Animated.View style={[styles.header, { height: headerHeight }]}>
+                    <Animated.View style={[styles.searchBarContainer, { opacity: searchBarOpacity }]}>
+                        <Icons
+                            name={'search'}
+                            width={16}
+                            height={16}
+                            fill={sharedColors.primaryColor}
+                            style={styles.searchIcon}
+                        />
+                        <TextInput
+                            style={styles.searchBar}
+                            placeholder="Search"
+                            value={searchQuery}
+                            onChangeText={setSearchQuery}
+                        />
+                    </Animated.View>
+                    <Animated.View style={{ opacity: searchBarOpacity }}>
+                        <ScrollView
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                        >
+                            <Tabs options={tabOptions} activeTab={activeTab} setActiveTab={setActiveTab} />
+                        </ScrollView>
+                    </Animated.View>
+                </Animated.View>
+                <FlatList
+                    showsVerticalScrollIndicator={false}
+                    data={filteredAnnouncements}
+                    renderItem={({ item }) => (
+                        <View style={styles.itemsContainer}>
+                            <AnnouncementCard
+                                title={item.title}
+                                description={item.description}
+                                remainingDays={calculateRemainingDays(item.expiryDate)}
+                                expireDate={new Date(item.expiryDate).toLocaleDateString("en-US")}
+                                image={item.image}
+                                pinned={userPins.includes(item.id)}
+                                onPinPress={() => handlePinPress(item.id)}
+                                onCheckPress={() => handleCheckPress(item.id)}
+                                isChecked={item.checkedUsers.includes(user.id)}
+                            />
+                        </View>
+                    )}
+                    keyExtractor={(item) => item.id.toString()}
+                    ItemSeparatorComponent={<View style={{ height: 16 }} />}
+                    ListEmptyComponent={emptyMessage}
+                    onScroll={Animated.event(
+                        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                        { useNativeDriver: false }
+                    )}
+                />
             </View>
-          )}
-          keyExtractor={(item) => item.id.toString()}
-          ItemSeparatorComponent={<View style={{ height: 16 }} />}
-          ListEmptyComponent={emptyMessage}
-          onScroll={handleScroll}
-        />
-      </View>
-    </SafeAreaView>
-  );
+            </KeyboardAvoidingView>
+
+        </SafeAreaView>
+    );
 };
 
 const emptyMessage = () => {
@@ -210,31 +164,39 @@ const emptyMessage = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: "#f9f9f9",
-  },
-  searchBarContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  tabsContainer: {
-    backgroundColor: "#f9f9f9",
-    marginBottom: 8,
-  },
-  searchBar: {
-    height: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 4,
-    paddingHorizontal: 8,
-    width: screenWidth - 32,
-  },
-  itemsContainer: {
-    flexGrow: 1,
-  },
+    container: {
+        flex: 1,
+        padding: 16,
+        backgroundColor: '#f9f9f9',
+    },
+    header: {
+        overflow: 'hidden',
+    },
+    searchBarContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        borderColor: '#0b5ada',
+        borderWidth: 1,
+        borderRadius: 5,
+        paddingHorizontal: 8,
+        marginBottom: 8,
+        height: 40,
+    },
+    searchIcon: {
+        marginRight: 8,
+    },
+    searchBar: {
+        flex: 1,
+        fontSize:16,
+        height: '100%',
+        color: '#000',
+
+    },
+    itemsContainer: {
+        flexGrow: 1,
+    },
+
 });
 
 export default AnnouncementsScreen;

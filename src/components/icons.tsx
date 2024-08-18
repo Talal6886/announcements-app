@@ -1,13 +1,13 @@
 import React from 'react';
 import { SvgProps } from 'react-native-svg';
-import IconHome from '@assets/icons/Home.svg';
+import IconHome from '@assets/icons/HomeIcon.svg';
 import ANB from '@assets/icons/anb.svg';
 import PinOutline from '@assets/icons/Pin_Outline.svg';
 import PinFill from '@assets/icons/PinFill.svg';
 import CheckIcon from '@assets/icons/check.svg';
 import ChechboxIcon from '@assets/icons/Checkbox.svg';
 import DateIcon from '@assets/icons/Date.svg';
-import TrashIcon from '@assets/icons/Trash.svg';
+import TrashIcon from '@assets/icons/TrashIcon.svg';
 import TrashDeleteIcon from '@assets/icons/TrashDelete.svg';
 import EyeOffIcon from '@assets/icons/eyeClose.svg';
 import EyeOpenIcon from '@assets/icons/eyeOpen.svg';
