@@ -1,5 +1,10 @@
 import React, { createContext, useState } from 'react';
 import logo from '@assets/images/Logo.png';
+import Frobes from '@assets/images/ForbesME.jpeg';
+import ProfitRetails from '@assets/images/ProfitRetails.jpeg'
+import Salary from '@assets/images/Salary.jpeg';
+import LocationBanks from '@assets/images/LocationsBanks.jpeg';
+
 
 export const AnnouncementsContext = createContext();
 
@@ -46,7 +51,7 @@ export const AnnouncementsProvider = ({ children }) => {
             description: "Planned maintenance for our IT systems will occur this weekend. Expect some downtime.",
             expiryDate: "2024-08-24",
             id: 1722773447830,
-            image: logo,
+            image: Frobes,
             pinned: false,
             text: "Be aware of the scheduled system maintenance and plan accordingly.",
             checkedUsers: []
@@ -80,7 +85,7 @@ export const AnnouncementsProvider = ({ children }) => {
             description: "Check out the latest products launching this month and see what’s new in our inventory.",
             expiryDate: "2024-08-28",
             id: 1722773447833,
-            image: logo,
+            image: ProfitRetails,
             pinned: false,
             text: "Explore our new product range available this month.",
             checkedUsers: []
@@ -91,7 +96,7 @@ export const AnnouncementsProvider = ({ children }) => {
             description: "Don’t miss out on our end-of-season sale with discounts on select items.",
             expiryDate: "2024-08-29",
             id: 1722773447834,
-            image: logo,
+            image: Salary,
             pinned: false,
             text: "Take advantage of our end-of-season sale for great deals.",
             checkedUsers: []
@@ -102,7 +107,7 @@ export const AnnouncementsProvider = ({ children }) => {
             description: "We value your feedback. Participate in our survey to help us improve our services.",
             expiryDate: "2024-08-30",
             id: 1722773447835,
-            image: logo,
+            image: LocationBanks,
             pinned: false,
             text: "Give us your feedback to enhance your shopping experience.",
             checkedUsers: []
@@ -111,7 +116,9 @@ export const AnnouncementsProvider = ({ children }) => {
         {
             category: "Security",
             title: "New Security Protocols",
-            description: "Updates to our security protocols. Make sure to review the new procedures.",
+            description: "Updates to our security protocols. Make sure to review the new procedures." +
+                "Updates to our security protocols. Make sure to review the new procedures." +
+                "Updates to our security protocols. Make sure to review the new procedures.",
             expiryDate: "2024-08-30",
             id: 1722773447836,
             image: logo,
@@ -146,16 +153,12 @@ export const AnnouncementsProvider = ({ children }) => {
     const [userPinnedAnnouncements, setUserPinnedAnnouncements] = useState({});
 
     const validUsers = [
-        { id: '', name: 'Admin', role: 'admin' },
-        { id: 'employee1', name: 'Employee 1', role: 'employee' },
-        { id: 'employee2', name: 'Employee 2', role: 'employee' },
-        { id: 'employee3', name: 'Employee 3', role: 'employee' },
-        { id: 'employee4', name: 'Employee 4', role: 'employee' },
-        { id: 'employee5', name: 'Employee 5', role: 'employee' },
-        { id: 'employee6', name: 'Employee 6', role: 'employee' },
-        { id: 'employee7', name: 'Employee 7', role: 'employee' },
-        { id: 'employee8', name: 'Employee 8', role: 'employee' },
-        { id: 'employee9', name: 'Employee 9', role: 'employee' },
+        { id: 'admin', name: 'Admin', role: 'admin', password: 'adminPass' },
+        { id: 'employee1', name: 'Employee 1', role: 'employee', password: 'pass1' },
+        { id: 'employee2', name: 'Employee 2', role: 'employee', password: 'pass2' },
+        { id: 'employee3', name: 'Employee 3', role: 'employee', password: 'pass3' },
+        { id: 'Talal', name: 'Talal', role: 'employee', password: 'Talal' },
+
     ];
 
     const togglePinAnnouncement = (announcementId, userId) => {

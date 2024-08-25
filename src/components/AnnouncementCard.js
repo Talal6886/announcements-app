@@ -1,12 +1,12 @@
-// AnnouncementCard.js
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Modal } from 'react-native';
 import Icons from '@components/icons';
 import { sharedColors } from '@components/constants';
 
-const AnnouncementCard = ({ title, description,remainingDays, expireDate, image, pinned, onPinPress, onCheckPress, isChecked }) => {
+const AnnouncementCard = ({ title, description, remainingDays, expireDate, image, pinned, onPinPress, onCheckPress, isChecked }) => {
     const [showFullDescription, setShowFullDescription] = useState(false);
-    const [read, setRead] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
     const getImageSource = () => {
         if (typeof image === 'number') {
             return image;
@@ -18,19 +18,31 @@ const AnnouncementCard = ({ title, description,remainingDays, expireDate, image,
         setShowFullDescription(!showFullDescription);
         if (!isChecked) {
             onCheckPress();
-            setRead(true);
         }
+    };
+
+    const toggleModal = () => {
+        setIsModalVisible(!isModalVisible);
     };
 
     return (
         <View style={[styles.card, pinned && styles.pinned]}>
-            {image && <Image source={getImageSource()} style={styles.image} />}
+            {image && (
+                <TouchableOpacity onPress={toggleModal}>
+                    <Image source={getImageSource()} style={styles.image} />
+                </TouchableOpacity>
+            )}
+            <Modal visible={isModalVisible} transparent={true}>
+                <TouchableOpacity style={styles.modalContainer} onPress={toggleModal}>
+                    <Image source={getImageSource()} style={styles.fullScreenImage} />
+                </TouchableOpacity>
+            </Modal>
             <View style={styles.contentRow}>
                 <Text style={styles.title}>{title}</Text>
                 <View style={styles.icons}>
                     <TouchableOpacity onPress={onPinPress}>
                         {pinned ? (
-                            <Icons name={'PinFill'} width={20} height={20}  fill={sharedColors.primaryColor} />
+                            <Icons name={'PinFill'} width={20} height={20} fill={sharedColors.primaryColor} />
                         ) : (
                             <Icons name={'PinOutline'} width={20} height={20} fill={sharedColors.primaryColor} />
                         )}
@@ -38,7 +50,7 @@ const AnnouncementCard = ({ title, description,remainingDays, expireDate, image,
                 </View>
             </View>
             <Text style={styles.description}>
-                {showFullDescription ? description : `${description.slice(0, 100)}...`}
+                {showFullDescription ? description : `${description.slice(0, 150)}...`}
             </Text>
             <TouchableOpacity onPress={toggleDescription}>
                 <Text style={styles.showMore}>
@@ -47,12 +59,9 @@ const AnnouncementCard = ({ title, description,remainingDays, expireDate, image,
             </TouchableOpacity>
             <View style={styles.contentRow}>
                 <Text style={styles.expireDate}>Expires in {remainingDays} days on {expireDate}</Text>
-            <View style={styles.markRead}>
-            {isChecked &&
-                <Icons name={'Check'} width={15} height={15}  fill={sharedColors.primaryColor} />
-
-            }
-            </View>
+                <View style={styles.markRead}>
+                    {isChecked && <Icons name={'Check'} width={15} height={15} fill={sharedColors.primaryColor} />}
+                </View>
             </View>
         </View>
     );
@@ -64,6 +73,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderRadius: 8,
         elevation: 2,
+        borderColor: '#E5E6E5',
+        borderWidth: 1,
+        shadowOpacity: 0.2,
+        opacity:0.9
     },
     image: {
         width: '100%',
@@ -72,9 +85,20 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 8,
         marginBottom: 8,
     },
+    fullScreenImage: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'contain',
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    },
     pinned: {
         borderColor: '#5697ff',
-        borderWidth: 2,
+        borderWidth: 1.5,
         borderRadius: 10,
     },
     title: {
@@ -88,7 +112,7 @@ const styles = StyleSheet.create({
         padding: 8,
         fontSize: 14,
         marginVertical: 4,
-        color: 'black',
+        color: '#4E5D6B',
     },
     showMore: {
         padding: 8,
@@ -110,12 +134,11 @@ const styles = StyleSheet.create({
     contentRow: {
         flexDirection: 'row',
     },
-    markRead:{
+    markRead: {
         alignItems: 'center',
-        position:"absolute",
+        position: 'absolute',
         marginLeft: 312.5,
     },
-
 });
 
 export default AnnouncementCard;

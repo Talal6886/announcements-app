@@ -11,7 +11,9 @@ const StatisticsScreen = () => {
     const tabOptions = ['HR', 'IT', 'Retails', 'Security'];
 
     const filteredAnnouncements = announcements.filter(
-        (announcement) => announcement.category === tabOptions[activeTab]
+        (announcement) =>
+            announcement.category === tabOptions[activeTab] &&
+            new Date(announcement.expiryDate) > new Date()
     );
 
     const getAnnouncementStats = (announcement) => {
@@ -23,12 +25,9 @@ const StatisticsScreen = () => {
     return (
         <View style={styles.container}>
             <View style={styles.tabsContainer}>
-                <ScrollView
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                >
+
                     <Tabs options={tabOptions} activeTab={activeTab} setActiveTab={setActiveTab} />
-                </ScrollView>
+
             </View>
             <FlatList
                 data={filteredAnnouncements}
@@ -47,15 +46,15 @@ const StatisticsScreen = () => {
                             <Text style={styles.dateText}>Expires: {formattedExpireDate}</Text>
                             <View style={styles.iconRow}>
                                 <View style={styles.iconWithText}>
-                                    <Icons name={"People"} width={30} height={30} fill={"#2196F3"} />
+                                    <Icons name={"People"} width={25} height={25} fill={"#2196F3"} />
                                     <Text style={styles.statText}>{totalCount}</Text>
                                 </View>
                                 <View style={styles.iconWithText}>
-                                    <Icons name={"EyeOff"} width={30} height={30} fill={"#F44336"}/>
+                                    <Icons name={"EyeOff"} width={25} height={25} fill={"#FF7474"}/>
                                     <Text style={styles.statText}>{uncheckedCount}</Text>
                                 </View>
                                 <View style={styles.iconWithText}>
-                                    <Icons name={"EyeOpen"} width={30} height={30} fill={"#4CAF50"} />
+                                    <Icons name={"EyeOpen"} width={25} height={25} fill={"#88C540"} />
                                     <Text style={styles.statText}>{checkedCount}</Text>
                                 </View>
                                 <View style={styles.iconWithText}>

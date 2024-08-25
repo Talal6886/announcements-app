@@ -5,7 +5,6 @@ import ANB from '@assets/icons/anb.svg';
 import PinOutline from '@assets/icons/Pin_Outline.svg';
 import PinFill from '@assets/icons/PinFill.svg';
 import CheckIcon from '@assets/icons/check.svg';
-import ChechboxIcon from '@assets/icons/Checkbox.svg';
 import DateIcon from '@assets/icons/Date.svg';
 import TrashIcon from '@assets/icons/TrashIcon.svg';
 import TrashDeleteIcon from '@assets/icons/TrashDelete.svg';
@@ -15,8 +14,13 @@ import PeopleIcon from '@assets/icons/people.svg';
 import StatisticsIcon from '@assets/icons/statis.svg';
 import searchIcon from '@assets/icons/searchIcon.svg';
 import FilterIcon from '@assets/icons/Filter.svg';
-import ImageIcon from '@assets/icons/BackGroundImage.svg';
-import ImageBottomIcon from '@assets/icons/BackgrounImageBottom.svg';
+import ContactUsIcon from '@assets/icons/ContactUsIcon.svg';
+import AboutAnbIcon from '@assets/icons/AboutanbIcon.svg';
+import MoreIcon from '@assets/icons/MoreIcon.svg';
+import BGImage from '@assets/icons/BGImage.svg';
+import XIcon from '@assets/icons/XIcon.svg';
+import AttachIcon from '@assets/icons/AttachIcon.svg';
+
 import NoResultsIcon from '@assets/icons/NoResult.svg';
 import { ViewStyle } from 'react-native';
 
@@ -33,7 +37,6 @@ const iconMap: { [key: string]: React.FC<SvgProps> } = {
     anb: ANB,
     PinOutline: PinOutline,
     PinFill: PinFill,
-    Checkbox: ChechboxIcon,
     Date: DateIcon,
     Trash: TrashIcon,
     EyeOff: EyeOffIcon,
@@ -44,9 +47,13 @@ const iconMap: { [key: string]: React.FC<SvgProps> } = {
     Check: CheckIcon,
     search: searchIcon,
     Filter: FilterIcon,
-    Image: ImageIcon,
-    ImageBottom: ImageBottomIcon,
+    ContactUs: ContactUsIcon,
+    AboutAnb: AboutAnbIcon,
     NoResults: NoResultsIcon,
+    More: MoreIcon,
+    BGImage: BGImage,
+    XIcon: XIcon,
+    AttachIcon: AttachIcon,
 };
 
 const Icons: React.FC<IconsProps> = ({ name, width = 24, height = 24, fill = 'white', style }) => {

@@ -13,15 +13,17 @@ const DeleteAnnouncementScreen = () => {
     const [activeTab, setActiveTab] = useState(0);
 
     const filteredAnnouncements = announcements.filter(
-        (announcement) => announcement.category === tabOptions[activeTab]
+        (announcement) =>
+            announcement.category === tabOptions[activeTab] &&
+            new Date(announcement.expiryDate) > new Date()
     );
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={{flex: 1}}>
+
+            <View style={styles.container}>
             <View style={styles.tabsContainer}>
-                <ScrollView horizontal={true}>
                     <Tabs options={tabOptions} activeTab={activeTab} setActiveTab={setActiveTab} />
-                </ScrollView>
             </View>
 
             <ScrollView>
@@ -41,6 +43,7 @@ const DeleteAnnouncementScreen = () => {
                     </View>
                 ))}
             </ScrollView>
+            </View>
         </SafeAreaView>
     );
 };
@@ -48,7 +51,7 @@ const DeleteAnnouncementScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 8,
+        padding: 16,
         justifyContent: 'top',
         backgroundColor: '#fff',
     },
@@ -85,7 +88,7 @@ const styles = StyleSheet.create({
     },
     iconContainer: {
         position: 'absolute',
-        marginLeft:338,
+        marginLeft:315,
     }
 });
 

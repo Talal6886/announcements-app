@@ -7,8 +7,9 @@ import {
     TextInput,
     FlatList,
     Animated,
-    ScrollView,
-    KeyboardAvoidingView, Platform, Image, ImageBackground
+    KeyboardAvoidingView,
+    Platform,
+    ActivityIndicator, TouchableOpacity, ImageBackground
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { AnnouncementsContext } from '@components/AnnouncementsContext';
@@ -16,12 +17,14 @@ import AnnouncementCard from '@components/AnnouncementCard';
 import { screenHeight, screenWidth, sharedColors } from '@components/constants';
 import { Tabs } from '@components/Tabs';
 import Icons from "@components/icons";
-import BackGroundImage from '@assets/icons/BackGroundImage.svg';
+import BGImage from "@assets/images/BGImage.png";
+import BottomImage from "@assets/images/BBGImage.png";
 
 const AnnouncementsScreen = () => {
     const { announcements, togglePinAnnouncement, markAnnouncementAsRead, user, userPinnedAnnouncements } = useContext(AnnouncementsContext);
     const [activeTab, setActiveTab] = useState(0);
     const [searchQuery, setSearchQuery] = useState('');
+    const [loading, setLoading] = useState(true);
     const navigation = useNavigation();
     const tabOptions = ['HR', 'IT', 'Retails', 'Security'];
 
@@ -30,12 +33,12 @@ const AnnouncementsScreen = () => {
     useEffect(() => {
         if (!user) {
             navigation.navigate('Login');
+        } else {
+            setTimeout(() => {
+                setLoading(false);
+            }, 300); // 0.3 seconds
         }
-    }, [user]);
-
-    if (!user) {
-        return null;
-    }
+    }, [user, navigation]);
 
     const filteredAnnouncements = announcements
         .filter(
@@ -69,97 +72,78 @@ const AnnouncementsScreen = () => {
 
     const userPins = userPinnedAnnouncements[user.id] || [];
 
-    const headerHeight = scrollY.interpolate({
-        inputRange: [0, 100],
-        outputRange: [100, 0],
-        extrapolate: 'clamp',
-    });
 
-    const searchBarOpacity = scrollY.interpolate({
-        inputRange: [0, 50],
-        outputRange: [1, 0],
-        extrapolate: 'clamp',
-    });
+    if (loading) {
+        return (
+            <View style={styles.loaderContainer}>
+                <ActivityIndicator size="large" color={sharedColors.primaryColor} />
+            </View>
+        );
+    }
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-
             <KeyboardAvoidingView
                 style={{ flex: 1 }}
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-                keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
             >
-            <View style={styles.container}>
-                <Icons name={'Image'} width={screenWidth} height={screenHeight * 0.60} fill={sharedColors.primaryColor} style={{position: 'absolute',
-                    top: 0,
-                    left: 0,}}/>
-                <Icons name={'ImageBottom'} width={screenWidth} height={screenHeight * 0.895} fill={sharedColors.primaryColor} style={{position: 'absolute',
-                    top: 0,
-                    left: 0,}}/>
-                <Animated.View style={[styles.header, { height: headerHeight }]}>
-                    <Animated.View style={[styles.searchBarContainer, { opacity: searchBarOpacity }]}>
-                        <View style={styles.filterIcon}>
-                        <Icons
-                            name={'Filter'}
-                            width={16}
-                            height={16}
-                            fill={sharedColors.primaryColor}
-                            style={styles.searchIcon}
-                        />
-                        </View>
-                        <Icons
-                            name={'search'}
-                            width={16}
-                            height={16}
-                            fill={sharedColors.primaryColor}
-                            style={styles.searchIcon}
-                        />
-                        <TextInput
-                            style={styles.searchBar}
-                            placeholder="Search"
-                            value={searchQuery}
-                            onChangeText={setSearchQuery}
-                        />
-                    </Animated.View>
-                    <Animated.View style={{ opacity: searchBarOpacity }}>
-                        <ScrollView
-                            horizontal={true}
-                            showsHorizontalScrollIndicator={false}
-                        >
-                            <Tabs options={tabOptions} activeTab={activeTab} setActiveTab={setActiveTab} />
-                        </ScrollView>
-                    </Animated.View>
-                </Animated.View>
+                <View style={styles.container}>
+                    <ImageBackground source={BGImage} style={{position:'absolute', width: 400, height:400, top: -40, left: 0,right:0,bottom: 0,}}/>
+                    <ImageBackground source={BottomImage} style={{position:'absolute', width: 400, height:400, top: 340, left: -30, }}/>
+                    <FlatList
+                        showsVerticalScrollIndicator={false}
+                        data={filteredAnnouncements}
+                        renderItem={({ item }) => (
+                            <View style={styles.itemsContainer}>
+                                <AnnouncementCard
+                                    title={item.title}
+                                    description={item.description}
+                                    remainingDays={calculateRemainingDays(item.expiryDate)}
+                                    expireDate={new Date(item.expiryDate).toLocaleDateString("en-US")}
+                                    image={item.image}
+                                    pinned={userPins.includes(item.id)}
+                                    onPinPress={() => handlePinPress(item.id)}
+                                    onCheckPress={() => handleCheckPress(item.id)}
+                                    isChecked={item.checkedUsers.includes(user.id)}
+                                />
+                            </View>
+                        )}
+                        keyExtractor={(item) => item.id.toString()}
+                        ItemSeparatorComponent={<View style={{ height: 16 }} />}
+                        ListEmptyComponent={emptyMessage}
+                        ListHeaderComponent={
+                            <View>
 
-                <FlatList
-                    showsVerticalScrollIndicator={false}
-                    data={filteredAnnouncements}
-                    renderItem={({ item }) => (
-                        <View style={styles.itemsContainer}>
-                            <AnnouncementCard
-                                title={item.title}
-                                description={item.description}
-                                remainingDays={calculateRemainingDays(item.expiryDate)}
-                                expireDate={new Date(item.expiryDate).toLocaleDateString("en-US")}
-                                image={item.image}
-                                pinned={userPins.includes(item.id)}
-                                onPinPress={() => handlePinPress(item.id)}
-                                onCheckPress={() => handleCheckPress(item.id)}
-                                isChecked={item.checkedUsers.includes(user.id)}
-                            />
-                        </View>
-                    )}
-                    keyExtractor={(item) => item.id.toString()}
-                    ItemSeparatorComponent={<View style={{ height: 16 }} />}
-                    ListEmptyComponent={emptyMessage}
-                    onScroll={Animated.event(
-                        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-                        { useNativeDriver: false }
-                    )}
-                />
-            </View>
+                                <View style={styles.searchBarContainer}>
+
+                                    <Icons
+                                        name={'search'}
+                                        width={20}
+                                        height={20}
+                                        fill={sharedColors.primaryColor}
+                                        style={styles.searchIcon}
+                                    />
+                                    <TextInput
+                                        style={styles.searchBar}
+                                        placeholder="Search announcements..."
+                                        value={searchQuery}
+                                        onChangeText={setSearchQuery}
+                                    />
+                                    <TouchableOpacity onPress={() => setSearchQuery('')}>
+                                    <Icons
+                                        name={'XIcon'}
+                                        width={15}
+                                        height={15}
+                                        fill={sharedColors.primaryColor}
+                                        style={styles.searchIcon}
+                                    />
+                                    </TouchableOpacity>
+                                </View>
+                                <Tabs options={tabOptions} activeTab={activeTab} setActiveTab={setActiveTab} />
+                            </View>
+                        }
+                    />
+                </View>
             </KeyboardAvoidingView>
-
         </SafeAreaView>
     );
 };
@@ -167,12 +151,11 @@ const AnnouncementsScreen = () => {
 const emptyMessage = () => {
     return (
         <View style={styles.container}>
-        <Icons name={'NoResults'} width={150} height={150} fill={sharedColors.primaryColor} style={{position: 'absolute',
-            top: 100,
-            left: 100,}}/>
-        <Text style={{position: 'absolute',
-            top: 300,
-            left: 100,}}>No announcements found.</Text>
+            <Icons name={'NoResults'} width={150} height={150} fill={sharedColors.primaryColor} style={{ position: 'absolute', top: 100, left: 100 }} />
+            <View style={{ position: 'absolute', top: 275, left: 20 }}>
+                <Text style={{ fontWeight: 'bold', fontSize: 20 }}>No Results!</Text>
+                <Text style={{ fontSize: 15 }}>No announcements found.</Text>
+            </View>
         </View>
     );
 };
@@ -181,56 +164,38 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
-        backgroundColor: '#f9f9f9',
+        backgroundColor: '#F2F2F2',
     },
-    header: {
-        overflow: 'hidden',
+    loaderContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f9f9f9',
     },
     searchBarContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#fff',
-        borderColor: '#0b5ada',
+        borderColor: sharedColors.primaryColor,
         borderWidth: 1,
-        borderRadius: 5,
+        borderRadius: 8,
         paddingHorizontal: 8,
-        marginBottom: 8,
+        marginBottom: 16,
         height: 40,
 
     },
     searchIcon: {
         marginRight: 8,
     },
-    filterIcon: {
-        position:'absolute',
-        marginLeft: 315,
-    },
     searchBar: {
         flex: 1,
-        fontSize:16,
         height: '100%',
-        color: '#000',
-
+        color: '#181B1E',
 
     },
     itemsContainer: {
         flexGrow: 1,
     },
-    iconBackground: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-    },
-    overlayContent: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 1,
-    },
-    text: {
-        color: 'white',
-        fontWeight: 'bold',
-    },
-
 });
 
 export default AnnouncementsScreen;

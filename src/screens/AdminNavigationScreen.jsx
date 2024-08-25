@@ -1,4 +1,4 @@
-// src/screens/AdminNavigationScreen.js
+// src/screens/AdminNavigationScreen.jsx
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AnnouncementsScreen from '@screens/AnnouncementsScreen';
@@ -14,7 +14,8 @@ const Tab = createBottomTabNavigator();
 const AdminNavigationScreen = () => {
     return (
         <Tab.Navigator
-            screenOptions={({ route }) => ({
+            screenOptions={({ route },) => ({
+                headerShown: false,
                 tabBarIcon: ({ color, size }) => {
                     let iconName;
 

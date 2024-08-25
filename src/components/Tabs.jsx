@@ -1,28 +1,33 @@
-import {Text, TouchableOpacity, View, StyleSheet } from "react-native";
+import {Text, TouchableOpacity, View, StyleSheet, ScrollView} from "react-native";
 import { screenHeight, screenWidth, sharedColors } from "@components/constants";
+import React from "react";
 
 export const Tabs = ({ options, activeTab, setActiveTab }) => {
   return (
       <View style={styles.switchContainer}>
-        {options.map((item, index) => (
-            <TouchableOpacity
-                key={index}
-                style={[
-                  styles.switchButton,
-                  activeTab === index && styles.switchButtonActive,
-                ]}
-                onPress={setActiveTab.bind(this, index)}
-            >
-              <Text
+        <ScrollView horizontal={true}
+                    showsHorizontalScrollIndicator={false}>
+          {options.map((item, index) => (
+              <TouchableOpacity
+                  key={index}
                   style={[
-                    styles.switchButtonText,
-                    activeTab === index && styles.activeText,
+                    styles.switchButton,
+                    activeTab === index && styles.switchButtonActive,
                   ]}
+                  onPress={setActiveTab.bind(this, index)}
               >
-                {item}
-              </Text>
-            </TouchableOpacity>
-        ))}
+                <Text
+                    style={[
+                      styles.switchButtonText,
+                      activeTab === index && styles.activeText,
+                    ]}
+                >
+                  {item}
+                </Text>
+              </TouchableOpacity>
+          ))}
+        </ScrollView>
+
       </View>
   );
 };
@@ -34,10 +39,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding:2.5,
     borderWidth:1,
-    borderColor: '#0b5ada',
+    borderColor: sharedColors.primaryColor,
     marginVertical: 5,
     backgroundColor: "#fff",
-    borderRadius: 5,
+    borderRadius: 8,
+    marginBottom: 16,
+    shadowOpacity:0.2,
+
 
   },
   switchButton: {

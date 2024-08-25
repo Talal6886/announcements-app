@@ -1,0 +1,1325 @@
+
+--- Content of file: E:\Expo React Native\announcements-app\src\components\AnnouncementCard.js ---
+
+// AnnouncementCard.js
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import Icons from '@components/icons';
+import { sharedColors } from '@components/constants';
+
+const AnnouncementCard = ({ title, description,remainingDays, expireDate, image, pinned, onPinPress, onCheckPress, isChecked }) => {
+    const [showFullDescription, setShowFullDescription] = useState(false);
+    const [read, setRead] = useState(false);
+    const getImageSource = () => {
+        if (typeof image === 'number') {
+            return image;
+        }
+        return { uri: image };
+    };
+
+    const toggleDescription = () => {
+        setShowFullDescription(!showFullDescription);
+        if (!isChecked) {
+            onCheckPress();
+            setRead(true);
+        }
+    };
+
+    return (
+        <View style={[styles.card, pinned && styles.pinned]}>
+            {image && <Image source={getImageSource()} style={styles.image} />}
+            <View style={styles.contentRow}>
+                <Text style={styles.title}>{title}</Text>
+                <View style={styles.icons}>
+                    <TouchableOpacity onPress={onPinPress}>
+                        {pinned ? (
+                            <Icons name={'PinFill'} width={20} height={20}  fill={sharedColors.primaryColor} />
+                        ) : (
+                            <Icons name={'PinOutline'} width={20} height={20} fill={sharedColors.primaryColor} />
+                        )}
+                    </TouchableOpacity>
+                </View>
+            </View>
+            <Text style={styles.description}>
+                {showFullDescription ? description : `${description.slice(0, 100)}...`}
+            </Text>
+            <TouchableOpacity onPress={toggleDescription}>
+                <Text style={styles.showMore}>
+                    {showFullDescription ? 'Show less' : 'Show more'}
+                </Text>
+            </TouchableOpacity>
+            <View style={styles.contentRow}>
+                <Text style={styles.expireDate}>Expires in {remainingDays} days on {expireDate}</Text>
+            <View style={styles.markRead}>
+            {isChecked &&
+                <Icons name={'Check'} width={15} height={15}  fill={sharedColors.primaryColor} />
+
+            }
+            </View>
+            </View>
+        </View>
+    );
+};
+
+const styles = StyleSheet.create({
+    card: {
+        marginVertical: 8,
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        elevation: 2,
+    },
+    image: {
+        width: '100%',
+        height: 200,
+        borderTopRightRadius: 8,
+        borderTopLeftRadius: 8,
+        marginBottom: 8,
+    },
+    pinned: {
+        borderColor: '#5697ff',
+        borderWidth: 2,
+        borderRadius: 10,
+    },
+    title: {
+        padding: 8,
+        width: '85%',
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: sharedColors.primaryColor,
+    },
+    description: {
+        padding: 8,
+        fontSize: 14,
+        marginVertical: 4,
+        color: 'black',
+    },
+    showMore: {
+        padding: 8,
+        fontSize: 14,
+        color: sharedColors.primaryColor,
+        textAlign: 'center',
+    },
+    expireDate: {
+        padding: 8,
+        fontSize: 12,
+        color: '#EF4A4A',
+    },
+    icons: {
+        alignItems: 'center',
+        position: 'absolute',
+        marginLeft: 312.5,
+        paddingTop: 8,
+    },
+    contentRow: {
+        flexDirection: 'row',
+    },
+    markRead:{
+        alignItems: 'center',
+        position:"absolute",
+        marginLeft: 312.5,
+    },
+
+});
+
+export default AnnouncementCard;
+
+
+--- Content of file: E:\Expo React Native\announcements-app\src\components\AnnouncementsContext.js ---
+
+import React, { createContext, useState } from 'react';
+import logo from '@assets/images/Logo.png';
+
+export const AnnouncementsContext = createContext();
+
+export const AnnouncementsProvider = ({ children }) => {
+    const [announcements, setAnnouncements] = useState([
+        // HR Announcements
+        {
+            category: "HR",
+            title: "HR Policy Update",
+            description: "Updates to the HR policy including new leave entitlements and revised working hours.Updates to the HR policy including new leave entitlements and revised working hours.Updates to the HR policy including new leave entitlements and revised working hours.Updates to the HR policy including new leave entitlements and revised working hours.Updates to the HR policy including new leave entitlements and revised working hours.Updates to the HR policy including new leave entitlements and revised working hours.Updates to the HR policy including new leave entitlements and revised working hours.Updates to the HR policy including new leave entitlements and revised working hours.Updates to the HR policy including new leave entitlements and revised working hours.Updates to the HR policy including new leave entitlements and revised working hours.Updates to the HR policy including new leave entitlements and revised working hours.Updates to the HR policy including new leave entitlements and revised working hours.Updates to the HR policy including new leave entitlements and revised working hours.Updates to the HR policy including new leave entitlements and revised working hours.Updates to the HR policy including new leave entitlements and revised working hours.Updates to the HR policy including new leave entitlements and revised working hours.",
+            expiryDate: "2024-08-20",
+            id: 1722773447827,
+            image: logo,
+            pinned: false,
+            text: "Read more about the latest HR policy changes.",
+            checkedUsers: []
+        },
+        {
+            category: "HR",
+            title: "New Benefits Package",
+            description: "Introducing new benefits and perks for employees. Find out what’s included.",
+            expiryDate: "2024-08-21",
+            id: 1722773447828,
+            image: logo,
+            pinned: false,
+            text: "Learn about the new benefits package available to all employees.",
+            checkedUsers: []
+        },
+        {
+            category: "HR",
+            title: "Upcoming HR Workshop",
+            description: "Join our upcoming workshop on professional development and career growth.",
+            expiryDate: "2024-08-22",
+            id: 1722773447829,
+            image: logo,
+            pinned: false,
+            text: "Register for our HR workshop to boost your professional skills.",
+            checkedUsers: []
+        },
+        // IT Announcements
+        {
+            category: "IT",
+            title: "System Maintenance Scheduled",
+            description: "Planned maintenance for our IT systems will occur this weekend. Expect some downtime.",
+            expiryDate: "2024-08-24",
+            id: 1722773447830,
+            image: logo,
+            pinned: false,
+            text: "Be aware of the scheduled system maintenance and plan accordingly.",
+            checkedUsers: []
+        },
+        {
+            category: "IT",
+            title: "New Software Rollout",
+            description: "We are rolling out new software updates. Please update your applications by the end of the week.",
+            expiryDate: "2024-08-25",
+            id: 1722773447831,
+            image: logo,
+            pinned: false,
+            text: "Ensure your software is up-to-date with the latest updates.",
+            checkedUsers: []
+        },
+        {
+            category: "IT",
+            title: "Cybersecurity Awareness Training",
+            description: "Participate in our cybersecurity training to stay informed about the latest threats and best practices.",
+            expiryDate: "2024-08-26",
+            id: 1722773447832,
+            image: logo,
+            pinned: false,
+            text: "Join our training to enhance your understanding of cybersecurity.",
+            checkedUsers: []
+        },
+        // Retails Announcements
+        {
+            category: "Retails",
+            title: "New Product Launch",
+            description: "Check out the latest products launching this month and see what’s new in our inventory.",
+            expiryDate: "2024-08-28",
+            id: 1722773447833,
+            image: logo,
+            pinned: false,
+            text: "Explore our new product range available this month.",
+            checkedUsers: []
+        },
+        {
+            category: "Retails",
+            title: "End of Season Sale",
+            description: "Don’t miss out on our end-of-season sale with discounts on select items.",
+            expiryDate: "2024-08-29",
+            id: 1722773447834,
+            image: logo,
+            pinned: false,
+            text: "Take advantage of our end-of-season sale for great deals.",
+            checkedUsers: []
+        },
+        {
+            category: "Retails",
+            title: "Customer Feedback Survey",
+            description: "We value your feedback. Participate in our survey to help us improve our services.",
+            expiryDate: "2024-08-30",
+            id: 1722773447835,
+            image: logo,
+            pinned: false,
+            text: "Give us your feedback to enhance your shopping experience.",
+            checkedUsers: []
+        },
+        // Security Announcements
+        {
+            category: "Security",
+            title: "New Security Protocols",
+            description: "Updates to our security protocols. Make sure to review the new procedures.",
+            expiryDate: "2024-08-30",
+            id: 1722773447836,
+            image: logo,
+            pinned: false,
+            text: "Review the new security protocols to ensure compliance.",
+            checkedUsers: []
+        },
+        {
+            category: "Security",
+            title: "Emergency Response Plan",
+            description: "Revised emergency response plan. Familiarize yourself with the updated procedures.",
+            expiryDate: "2024-08-31",
+            id: 1722773447837,
+            image: logo,
+            pinned: false,
+            text: "Understand the new emergency response plan and stay safe.",
+            checkedUsers: []
+        },
+        {
+            category: "Security",
+            title: "Security Awareness Training",
+            description: "Mandatory security awareness training for all employees. Attendance is required.",
+            expiryDate: "2024-09-01",
+            id: 1722773447838,
+            image: logo,
+            pinned: false,
+            text: "Participate in security awareness training to stay informed.",
+            checkedUsers: []
+        },
+    ]);
+    const [user, setUser] = useState(null);
+    const [userPinnedAnnouncements, setUserPinnedAnnouncements] = useState({});
+
+    const validUsers = [
+        { id: 'admin', name: 'Admin', role: 'admin' },
+        { id: 'employee1', name: 'Employee 1', role: 'employee' },
+        { id: 'employee2', name: 'Employee 2', role: 'employee' },
+        { id: 'employee3', name: 'Employee 3', role: 'employee' },
+        { id: 'employee4', name: 'Employee 4', role: 'employee' },
+        { id: 'employee5', name: 'Employee 5', role: 'employee' },
+        { id: 'employee6', name: 'Employee 6', role: 'employee' },
+        { id: 'employee7', name: 'Employee 7', role: 'employee' },
+        { id: 'employee8', name: 'Employee 8', role: 'employee' },
+        { id: 'employee9', name: 'Employee 9', role: 'employee' },
+    ];
+
+    const togglePinAnnouncement = (announcementId, userId) => {
+        setUserPinnedAnnouncements((prevPinned) => {
+            const userPins = prevPinned[userId] || [];
+            if (userPins.includes(announcementId)) {
+                return {
+                    ...prevPinned,
+                    [userId]: userPins.filter((id) => id !== announcementId),
+                };
+            } else {
+                return {
+                    ...prevPinned,
+                    [userId]: [...userPins, announcementId],
+                };
+            }
+        });
+    };
+
+    const incrementViews = (id) => {
+        setAnnouncements((prevAnnouncements) =>
+            prevAnnouncements.map((announcement) =>
+                announcement.id === id ? { ...announcement, views: announcement.views + 1 } : announcement
+            )
+        );
+    };
+
+    const markAnnouncementAsRead = (id, userId) => {
+        setAnnouncements((prevAnnouncements) =>
+            prevAnnouncements.map((announcement) =>
+                announcement.id === id && !announcement.checkedUsers.includes(userId)
+                    ? { ...announcement, checkedUsers: [...announcement.checkedUsers, userId] }
+                    : announcement
+            )
+        );
+    };
+
+    const addAnnouncement = (announcement) => {
+        const newAnnouncement = { ...announcement, checkedUsers: [] };
+        setAnnouncements((prevAnnouncements) => [...prevAnnouncements, newAnnouncement]);
+    };
+
+    const removeAnnouncement = (id) => {
+        setAnnouncements((prevAnnouncements) => prevAnnouncements.filter((announcement) => announcement.id !== id));
+    };
+
+    return (
+        <AnnouncementsContext.Provider
+            value={{
+                announcements,
+                togglePinAnnouncement,
+                incrementViews,
+                markAnnouncementAsRead,
+                addAnnouncement,
+                removeAnnouncement,
+                user,
+                setUser,
+                validUsers,
+                userPinnedAnnouncements,
+            }}
+        >
+            {children}
+        </AnnouncementsContext.Provider>
+    );
+};
+
+--- Content of file: E:\Expo React Native\announcements-app\src\components\buttons.js ---
+
+import {TouchableOpacity, Text, Platform} from "react-native";
+import {isIOS} from "./constants";
+
+export const Button = ({ style, textButton, onPress, textStyle }) => (
+    <TouchableOpacity style={style} onPress={onPress}>
+        <Text style={isIOS ? textStyle : {backgroundColor: 'Another Style for Android'}}>{textButton}</Text>
+    </TouchableOpacity>
+);
+
+
+
+/*
+const stylePlatform = (Platform.OS) => {
+    switch (Platform.OS) {
+        case "ios":
+            return {
+
+            }
+    }
+}*/
+
+
+--- Content of file: E:\Expo React Native\announcements-app\src\components\constants.ts ---
+
+import { Dimensions, Platform } from "react-native";
+
+// Dimensions
+export const screenHeight = Dimensions.get("window").height;
+export const screenWidth = Dimensions.get("window").width;
+
+//Colors
+export const sharedColors = {
+  primaryColor: "#0072DA",
+  secondaryColor: "#002858",
+};
+
+
+export const isIOS = Platform.OS === "ios"
+
+--- Content of file: E:\Expo React Native\announcements-app\src\components\icons.tsx ---
+
+import React from 'react';
+import { SvgProps } from 'react-native-svg';
+import IconHome from '@assets/icons/HomeIcon.svg';
+import ANB from '@assets/icons/anb.svg';
+import PinOutline from '@assets/icons/Pin_Outline.svg';
+import PinFill from '@assets/icons/PinFill.svg';
+import CheckIcon from '@assets/icons/check.svg';
+import ChechboxIcon from '@assets/icons/Checkbox.svg';
+import DateIcon from '@assets/icons/Date.svg';
+import TrashIcon from '@assets/icons/TrashIcon.svg';
+import TrashDeleteIcon from '@assets/icons/TrashDelete.svg';
+import EyeOffIcon from '@assets/icons/eyeClose.svg';
+import EyeOpenIcon from '@assets/icons/eyeOpen.svg';
+import PeopleIcon from '@assets/icons/people.svg';
+import StatisticsIcon from '@assets/icons/statis.svg';
+import searchIcon from '@assets/icons/searchIcon.svg';
+import FilterIcon from '@assets/icons/Filter.svg';
+import ImageIcon from '@assets/icons/BackGroundImage.svg';
+import ImageBottomIcon from '@assets/icons/BackgrounImageBottom.svg';
+import NoResultsIcon from '@assets/icons/NoResult.svg';
+import { ViewStyle } from 'react-native';
+
+type IconsProps = {
+    name: string;
+    width?: number;
+    height?: number;
+    fill?: string;
+    style?: ViewStyle;
+};
+
+const iconMap: { [key: string]: React.FC<SvgProps> } = {
+    Home: IconHome,
+    anb: ANB,
+    PinOutline: PinOutline,
+    PinFill: PinFill,
+    Checkbox: ChechboxIcon,
+    Date: DateIcon,
+    Trash: TrashIcon,
+    EyeOff: EyeOffIcon,
+    EyeOpen: EyeOpenIcon,
+    People: PeopleIcon,
+    Statistics: StatisticsIcon,
+    Delete: TrashDeleteIcon,
+    Check: CheckIcon,
+    search: searchIcon,
+    Filter: FilterIcon,
+    Image: ImageIcon,
+    ImageBottom: ImageBottomIcon,
+    NoResults: NoResultsIcon,
+};
+
+const Icons: React.FC<IconsProps> = ({ name, width = 24, height = 24, fill = 'white', style }) => {
+    const SelectedIcon = iconMap[name];
+
+    if (!SelectedIcon) {
+        console.error(`Icon with name "${name}" not found.`);
+        return null;
+    }
+
+    return <SelectedIcon width={width} height={height} fill={fill} style={style as any} />;
+};
+
+export default Icons;
+
+
+--- Content of file: E:\Expo React Native\announcements-app\src\components\Tabs.jsx ---
+
+import {Text, TouchableOpacity, View, StyleSheet } from "react-native";
+import { screenHeight, screenWidth, sharedColors } from "@components/constants";
+
+export const Tabs = ({ options, activeTab, setActiveTab }) => {
+  return (
+      <View style={styles.switchContainer}>
+        {options.map((item, index) => (
+            <TouchableOpacity
+                key={index}
+                style={[
+                  styles.switchButton,
+                  activeTab === index && styles.switchButtonActive,
+                ]}
+                onPress={setActiveTab.bind(this, index)}
+            >
+              <Text
+                  style={[
+                    styles.switchButtonText,
+                    activeTab === index && styles.activeText,
+                  ]}
+              >
+                {item}
+              </Text>
+            </TouchableOpacity>
+        ))}
+      </View>
+  );
+};
+
+const styles = StyleSheet.create({
+
+  switchContainer: {
+    flexDirection: "row-reverse",
+    justifyContent: "center",
+    padding:2.5,
+    borderWidth:1,
+    borderColor: '#0b5ada',
+    marginVertical: 5,
+    backgroundColor: "#fff",
+    borderRadius: 5,
+
+  },
+  switchButton: {
+    padding: 10,
+    borderRadius: 5,
+    width: 90, // Consistent width
+    height: 0.044 * screenHeight,
+    alignItems: "center",
+  },
+  switchButtonActive: {
+    backgroundColor: "#ccc",
+    width: 90, // Consistent width
+    height: 0.044 * screenHeight,
+    alignItems: "center",
+  },
+  switchButtonText: {
+    fontSize: 13,
+    color: 'black',
+    fontWeight: "bold",
+  },
+  activeText: {
+    color: sharedColors.primaryColor, // Active text color
+  },
+});
+
+
+--- Content of file: E:\Expo React Native\announcements-app\src\declarations.d.ts ---
+
+declare module '*.svg' {
+    import { SvgProps } from 'react-native-svg';
+    const content: React.FC<SvgProps>;
+    export default content;
+}
+
+--- Content of file: E:\Expo React Native\announcements-app\src\screens\AdminNavigationScreen.jsx ---
+
+// src/screens/AdminNavigationScreen.jsx
+import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import AnnouncementsScreen from '@screens/AnnouncementsScreen';
+import AdminScreen from '@screens/AdminScreen';
+import StatisticsScreen from '@screens/StatisticsScreen';
+import DeleteAnnouncementScreen from '@screens/DeleteAnnouncementScreen';
+import { sharedColors } from '@components/constants';
+import Icons from "@components/icons";
+
+
+const Tab = createBottomTabNavigator();
+
+const AdminNavigationScreen = () => {
+    return (
+        <Tab.Navigator
+            screenOptions={({ route }) => ({
+                tabBarIcon: ({ color, size }) => {
+                    let iconName;
+
+                    if (route.name === 'Announcements') {
+                        iconName = 'Home';
+                    } else if (route.name === 'Add') {
+                        iconName = 'Date';
+                    } else if (route.name === 'Delete') {
+                        iconName = 'Trash';
+                    } else if (route.name === 'Statistics') {
+                        iconName = 'Statistics';
+                    }
+
+                    return <Icons name={iconName} width={28} height={28} fill={color} />;
+                },
+                tabBarActiveTintColor: sharedColors.primaryColor,
+                tabBarInactiveTintColor: "#81B9ED",
+            })}
+        >
+            <Tab.Screen name="Announcements" component={AnnouncementsScreen} />
+            <Tab.Screen name="Add" component={AdminScreen} />
+            <Tab.Screen name="Delete" component={DeleteAnnouncementScreen} />
+            <Tab.Screen name="Statistics" component={StatisticsScreen} />
+        </Tab.Navigator>
+    );
+};
+
+export default AdminNavigationScreen;
+
+
+
+--- Content of file: E:\Expo React Native\announcements-app\src\screens\AdminScreen.jsx ---
+
+import React, { useState, useContext } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  SafeAreaView,
+  Platform, KeyboardAvoidingView
+} from 'react-native';
+import { Tabs } from '@components/Tabs';
+import { AnnouncementsContext } from '@components/AnnouncementsContext';
+import { Button } from '@components/buttons';
+import { screenHeight, screenWidth, sharedColors } from '@components/constants';
+import * as ImagePicker from 'expo-image-picker';
+import { Calendar } from 'react-native-calendars';
+import Icons from "@components/icons";
+
+const AdminScreen = ({ navigation }) => {
+  const [announcement, setAnnouncement] = useState('');
+  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState(0);
+  const [expiryDate, setExpiryDate] = useState('');
+  const [image, setImage] = useState(null);
+  const { addAnnouncement, announcements } = useContext(AnnouncementsContext);
+  const tabOptions = ['HR', 'IT', 'Retails', 'Security'];
+
+  const handleAddAnnouncement = () => {
+    const newAnnouncement = {
+      id: Date.now(),
+      title: announcement,
+      description: description,
+      category: tabOptions[category],
+      expiryDate: expiryDate,
+      image: image,
+      pinned: false,
+    };
+    addAnnouncement(newAnnouncement);
+    setAnnouncement('');
+    setDescription('');
+    setExpiryDate('');
+    setImage(null);
+  };
+
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
+  const filteredAnnouncements = announcements.filter(
+      (announcement) => announcement.category === tabOptions[category]
+  );
+
+  return (
+        <SafeAreaView style={{ flex: 1 }}>
+          <KeyboardAvoidingView
+              style={{ flex: 1 }}
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+              keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+          >
+          <View style={styles.container}>
+            <Text style={styles.label}>Add Announcement</Text>
+            <View style={styles.cardContainer}>
+              <ScrollView
+                  showsHorizontalScrollIndicator={false}
+                  horizontal={true}>
+                <Tabs options={tabOptions} activeTab={category} setActiveTab={setCategory} />
+              </ScrollView>
+            </View>
+            <ScrollView>
+              <View style={styles.inputContainer}>
+                <TextInput
+                    style={styles.input}
+                    value={announcement}
+                    onChangeText={setAnnouncement}
+                    placeholder="Enter announcement"
+                    maxLength={40}
+                />
+                <TextInput
+                    style={[styles.input, { height: 100 }]}
+                    value={description}
+                    onChangeText={setDescription}
+                    placeholder="Enter description"
+                    multiline
+                />
+              </View>
+              <Text style={styles.dateText}>Select Date</Text>
+              <Calendar
+                  onDayPress={(day) => setExpiryDate(day.dateString)}
+                  markedDates={{
+                    [expiryDate]: { selected: true, marked: true, selectedColor: 'blue' },
+                  }}
+              />
+
+              <Text style={styles.dateText}>Expiry Date: {expiryDate}</Text>
+
+              <Button
+                  style={styles.button}
+                  textButton={"Pick Image"}
+                  textStyle={styles.text}
+                  onPress={pickImage}
+              />
+
+              <Button
+                  style={styles.button}
+                  textButton={"Add Announcement"}
+                  textStyle={styles.text}
+                  onPress={handleAddAnnouncement}
+              />
+            </ScrollView>
+          </View>
+          </KeyboardAvoidingView>
+        </SafeAreaView>
+
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 8,
+    justifyContent: 'top',
+    backgroundColor: '#fff',
+  },
+  cardContainer: {
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+  },
+  inputContainer: {
+    paddingTop: 16,
+  },
+  label: {
+    fontSize: 18,
+    marginBottom: 8,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#0b5ada',
+    padding: 10,
+    marginBottom: 16,
+    borderRadius: 4,
+  },
+  dateText: {
+    marginVertical: 12,
+    fontSize: 16,
+  },
+  button: {
+    alignItems: 'center',
+    width: 0.92 * screenWidth,
+    height: 0.07 * screenHeight,
+    marginTop: 5,
+    borderRadius: 10,
+    backgroundColor: sharedColors.primaryColor,
+  },
+  text: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
+    padding: 15,
+  },
+});
+
+export default AdminScreen;
+
+
+--- Content of file: E:\Expo React Native\announcements-app\src\screens\AnnouncementsScreen.jsx ---
+
+import React, { useContext, useState, useEffect, useRef } from 'react';
+import {
+    View,
+    StyleSheet,
+    SafeAreaView,
+    Text,
+    TextInput,
+    FlatList,
+    Animated,
+    ScrollView,
+    KeyboardAvoidingView, Platform, Image, ImageBackground
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { AnnouncementsContext } from '@components/AnnouncementsContext';
+import AnnouncementCard from '@components/AnnouncementCard';
+import { screenHeight, screenWidth, sharedColors } from '@components/constants';
+import { Tabs } from '@components/Tabs';
+import Icons from "@components/icons";
+import BackGroundImage from '@assets/icons/BackGroundImage.svg';
+
+const AnnouncementsScreen = () => {
+    const { announcements, togglePinAnnouncement, markAnnouncementAsRead, user, userPinnedAnnouncements } = useContext(AnnouncementsContext);
+    const [activeTab, setActiveTab] = useState(0);
+    const [searchQuery, setSearchQuery] = useState('');
+    const navigation = useNavigation();
+    const tabOptions = ['HR', 'IT', 'Retails', 'Security'];
+
+    const scrollY = useRef(new Animated.Value(0)).current;
+
+    // useEffect(() => {
+    //     if (!user) {
+    //         navigation.navigate('Login');
+    //     }
+    // }, [user]);
+    //
+    // if (!user) {
+    //     return null;
+    // }
+
+    const filteredAnnouncements = announcements
+        .filter(
+            (announcement) =>
+                announcement.category === tabOptions[activeTab] &&
+                new Date(announcement.expiryDate) > new Date() &&
+                (announcement.title ? announcement.title.toLowerCase().includes(searchQuery.toLowerCase()) : false)
+        )
+        .sort((a, b) => {
+            const userPinsA = userPinnedAnnouncements[user.id] || [];
+            const userPinsB = userPinnedAnnouncements[user.id] || [];
+            const isPinnedA = userPinsA.includes(a.id);
+            const isPinnedB = userPinsB.includes(b.id);
+            return isPinnedB - isPinnedA;
+        });
+
+    const calculateRemainingDays = (expiryDate) => {
+        const today = new Date();
+        const expiry = new Date(expiryDate);
+        const timeDiff = expiry - today;
+        return Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+    };
+
+    const handlePinPress = (id) => {
+        togglePinAnnouncement(id, user.id);
+    };
+
+    const handleCheckPress = (id) => {
+        markAnnouncementAsRead(id, user.id);
+    };
+
+    const userPins = userPinnedAnnouncements[user.id] || [];
+
+    const headerHeight = scrollY.interpolate({
+        inputRange: [0, 100],
+        outputRange: [100, 0],
+        extrapolate: 'clamp',
+    });
+
+    const searchBarOpacity = scrollY.interpolate({
+        inputRange: [0, 50],
+        outputRange: [1, 0],
+        extrapolate: 'clamp',
+    });
+
+    return (
+        <SafeAreaView style={{ flex: 1 }}>
+
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+            >
+            <View style={styles.container}>
+                <Icons name={'Image'} width={screenWidth} height={screenHeight * 0.60} fill={sharedColors.primaryColor} style={{position: 'absolute',
+                    top: 0,
+                    left: 0,}}/>
+                <Icons name={'ImageBottom'} width={screenWidth} height={screenHeight * 0.895} fill={sharedColors.primaryColor} style={{position: 'absolute',
+                    top: 0,
+                    left: 0,}}/>
+                <Animated.View style={[styles.header, { height: headerHeight }]}>
+                    <Animated.View style={[styles.searchBarContainer, { opacity: searchBarOpacity }]}>
+                        <View style={styles.filterIcon}>
+                        <Icons
+                            name={'Filter'}
+                            width={16}
+                            height={16}
+                            fill={sharedColors.primaryColor}
+                            style={styles.searchIcon}
+                        />
+                        </View>
+                        <Icons
+                            name={'search'}
+                            width={16}
+                            height={16}
+                            fill={sharedColors.primaryColor}
+                            style={styles.searchIcon}
+                        />
+                        <TextInput
+                            style={styles.searchBar}
+                            placeholder="Search"
+                            value={searchQuery}
+                            onChangeText={setSearchQuery}
+                        />
+                    </Animated.View>
+                    <Animated.View style={{ opacity: searchBarOpacity }}>
+                        <ScrollView
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                        >
+                            <Tabs options={tabOptions} activeTab={activeTab} setActiveTab={setActiveTab} />
+                        </ScrollView>
+                    </Animated.View>
+                </Animated.View>
+
+                <FlatList
+                    showsVerticalScrollIndicator={false}
+                    data={filteredAnnouncements}
+                    renderItem={({ item }) => (
+                        <View style={styles.itemsContainer}>
+                            <AnnouncementCard
+                                title={item.title}
+                                description={item.description}
+                                remainingDays={calculateRemainingDays(item.expiryDate)}
+                                expireDate={new Date(item.expiryDate).toLocaleDateString("en-US")}
+                                image={item.image}
+                                pinned={userPins.includes(item.id)}
+                                onPinPress={() => handlePinPress(item.id)}
+                                onCheckPress={() => handleCheckPress(item.id)}
+                                isChecked={item.checkedUsers.includes(user.id)}
+                            />
+                        </View>
+                    )}
+                    keyExtractor={(item) => item.id.toString()}
+                    ItemSeparatorComponent={<View style={{ height: 16 }} />}
+                    ListEmptyComponent={emptyMessage}
+                    onScroll={Animated.event(
+                        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                        { useNativeDriver: false }
+                    )}
+                />
+            </View>
+            </KeyboardAvoidingView>
+
+        </SafeAreaView>
+    );
+};
+
+const emptyMessage = () => {
+    return (
+        <View style={styles.container}>
+        <Icons name={'NoResults'} width={150} height={150} fill={sharedColors.primaryColor} style={{position: 'absolute',
+            top: 100,
+            left: 100,}}/>
+            <View style={{position: 'absolute',
+                top: 275,
+                left: 20,}}>
+                <Text style={{fontWeight: 'bold', fontSize:20}}>No Results!</Text>
+        <Text  style={{fontSize:15}}>No announcements found.</Text>
+            </View>
+        </View>
+    );
+};
+
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 16,
+        backgroundColor: '#f9f9f9',
+    },
+    header: {
+        overflow: 'hidden',
+    },
+    searchBarContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        borderColor: '#0b5ada',
+        borderWidth: 1,
+        borderRadius: 5,
+        paddingHorizontal: 8,
+        marginBottom: 8,
+        height: 40,
+
+    },
+    searchIcon: {
+        marginRight: 8,
+    },
+    filterIcon: {
+        position:'absolute',
+        marginLeft: 315,
+    },
+    searchBar: {
+        flex: 1,
+        fontSize:16,
+        height: '100%',
+        color: '#000',
+
+
+    },
+    itemsContainer: {
+        flexGrow: 1,
+    },
+    iconBackground: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+    },
+    overlayContent: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 1,
+    },
+    text: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
+
+});
+
+export default AnnouncementsScreen;
+
+
+--- Content of file: E:\Expo React Native\announcements-app\src\screens\DeleteAnnouncementScreen.jsx ---
+
+// src/screens/DeleteAnnouncementScreen.js
+import React, { useContext, useState } from 'react';
+import {View, Text, ScrollView, StyleSheet, SafeAreaView, TouchableOpacity} from 'react-native';
+import { AnnouncementsContext } from '@components/AnnouncementsContext';
+import { Button } from '@components/buttons';
+import { Tabs } from '@components/Tabs';
+import { screenHeight, screenWidth, sharedColors } from '@components/constants';
+import Icons from "@components/icons";
+
+const DeleteAnnouncementScreen = () => {
+    const { announcements, removeAnnouncement } = useContext(AnnouncementsContext);
+    const tabOptions = ['HR', 'IT', 'Retails', 'Security'];
+    const [activeTab, setActiveTab] = useState(0);
+
+    const filteredAnnouncements = announcements.filter(
+        (announcement) => announcement.category === tabOptions[activeTab]
+    );
+
+    return (
+        <SafeAreaView style={styles.container}>
+            <View style={styles.tabsContainer}>
+                <ScrollView horizontal={true}>
+                    <Tabs options={tabOptions} activeTab={activeTab} setActiveTab={setActiveTab} />
+                </ScrollView>
+            </View>
+
+            <ScrollView>
+                {filteredAnnouncements.map((announcement) => (
+                    <View key={announcement.id} style={styles.announcementContainer}>
+                        <Text>{announcement.title}</Text>
+                        <View style={styles.iconContainer}>
+                            <TouchableOpacity onPress={() => removeAnnouncement(announcement.id)}>
+                                <Icons
+                                name={'Delete'}
+                                width={30}
+                                height={30}
+                                fill={'red'}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                ))}
+            </ScrollView>
+        </SafeAreaView>
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 8,
+        justifyContent: 'top',
+        backgroundColor: '#fff',
+    },
+    label: {
+        fontSize: 18,
+        marginBottom: 8,
+    },
+    tabsContainer: {
+        justifyContent: 'center',
+        backgroundColor: '#fff',
+        marginBottom: 10,
+    },
+    announcementContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+        width:'100%'
+    },
+    removeButton: {
+        alignItems: "center",
+        width: 0.2 * screenWidth,
+        height: 0.04 * screenHeight,
+        borderRadius: 10,
+        backgroundColor: sharedColors.primaryColor,
+    },
+    removeText: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: 'white',
+        padding: 7,
+    },
+    iconContainer: {
+        position: 'absolute',
+        marginLeft:338,
+    }
+});
+
+export default DeleteAnnouncementScreen;
+
+
+--- Content of file: E:\Expo React Native\announcements-app\src\screens\login.jsx ---
+
+
+
+const loginUser = () => {
+
+}
+
+--- Content of file: E:\Expo React Native\announcements-app\src\screens\LoginScreen.jsx ---
+
+// src/screens/LoginScreen.js
+import React, { useState, useContext } from 'react';
+import {View, Text, TextInput, Button, StyleSheet, Image, ImageBackground, SafeAreaView} from 'react-native';
+import { AnnouncementsContext } from '@components/AnnouncementsContext';
+import Icons from "@components/icons";
+import {screenHeight, screenWidth, sharedColors} from "@components/constants";
+import BackGroundImage from "@assets/icons/BackGroundImage.svg";
+import logo from "@assets/images/Logo.png";
+
+
+const LoginScreen = ({ navigation }) => {
+    const [username, setUsername] = useState('');
+    const { validUsers, setUser } = useContext(AnnouncementsContext);
+
+    const handleLogin = () => {
+        const user = validUsers.find((u) => u.id === username);
+        if (user) {
+            setUser(user);
+            if (user.role === 'admin') {
+                navigation.navigate('AdminNavigation');
+            } else {
+                navigation.navigate('Announcements');
+            }
+        } else {
+            alert('Invalid username');
+        }
+    };
+
+    return (
+        <View style={styles.container}>
+            <Icons name='Image' width={screenWidth} height={screenHeight * 0.9} fill={sharedColors.primaryColor} style={{position: 'absolute',
+                top: 0,
+                left: 0,}}/>
+            <View style={{justifyContent: 'center',
+                alignItems: 'center',
+                zIndex: 1,}}>
+                <Text style={styles.title}>Login</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Enter username"
+                    value={username}
+                    onChangeText={setUsername}
+                />
+                <Button title="Login" onPress={handleLogin} />
+            </View>
+        </View>
+    );
+};
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 16,
+        backgroundColor: '#fff',
+    },
+    image: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    title: {
+        fontSize: 24,
+        marginBottom: 16,
+    },
+    input: {
+        height: 40,
+        borderColor: '#ccc',
+        borderWidth: 1,
+        marginBottom: 16,
+        borderRadius: 4,
+        paddingHorizontal: 8,
+        width: '80%',
+    },
+});
+
+export default LoginScreen;
+
+
+--- Content of file: E:\Expo React Native\announcements-app\src\screens\StatisticsScreen.jsx ---
+
+import React, { useContext, useState } from 'react';
+import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
+import * as Progress from 'react-native-progress';
+import { AnnouncementsContext } from '@components/AnnouncementsContext';
+import { Tabs } from '@components/Tabs';
+import Icons from "@components/icons";
+
+const StatisticsScreen = () => {
+    const { announcements, validUsers } = useContext(AnnouncementsContext);
+    const [activeTab, setActiveTab] = useState(0);
+    const tabOptions = ['HR', 'IT', 'Retails', 'Security'];
+
+    const filteredAnnouncements = announcements.filter(
+        (announcement) => announcement.category === tabOptions[activeTab]
+    );
+
+    const getAnnouncementStats = (announcement) => {
+        const checkedCount = announcement.checkedUsers.length;
+        const uncheckedCount = validUsers.filter(user => user.role === 'employee').length - checkedCount;
+        return { checkedCount, uncheckedCount };
+    };
+
+    return (
+        <View style={styles.container}>
+            <View style={styles.tabsContainer}>
+                <ScrollView
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                >
+                    <Tabs options={tabOptions} activeTab={activeTab} setActiveTab={setActiveTab} />
+                </ScrollView>
+            </View>
+            <FlatList
+                data={filteredAnnouncements}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => {
+                    const { checkedCount, uncheckedCount } = getAnnouncementStats(item);
+                    const totalCount = uncheckedCount + checkedCount;
+                    const progress = checkedCount / totalCount;
+                    const formattedAddDate = new Date(item.id).toLocaleDateString("en-US"); // Assuming id is a timestamp
+                    const formattedExpireDate = new Date(item.expiryDate).toLocaleDateString("en-US");
+
+                    return (
+                        <View style={styles.statContainer}>
+                            <Text style={styles.announcementText}>{item.title}</Text>
+                            <Text style={styles.dateText}>Added: {formattedAddDate}</Text>
+                            <Text style={styles.dateText}>Expires: {formattedExpireDate}</Text>
+                            <View style={styles.iconRow}>
+                                <View style={styles.iconWithText}>
+                                    <Icons name={"People"} width={30} height={30} fill={"#2196F3"} />
+                                    <Text style={styles.statText}>{totalCount}</Text>
+                                </View>
+                                <View style={styles.iconWithText}>
+                                    <Icons name={"EyeOff"} width={30} height={30} fill={"#F44336"}/>
+                                    <Text style={styles.statText}>{uncheckedCount}</Text>
+                                </View>
+                                <View style={styles.iconWithText}>
+                                    <Icons name={"EyeOpen"} width={30} height={30} fill={"#4CAF50"} />
+                                    <Text style={styles.statText}>{checkedCount}</Text>
+                                </View>
+                                <View style={styles.iconWithText}>
+                                    <Progress.Circle progress={progress} size={100} color="#0072DA"/>
+                                    <Text style={styles.progressNum}> {Math.round(progress * 100)}%</Text>
+                                    <Text style={styles.progressText}>Completed</Text>
+                                </View>
+                            </View>
+                        </View>
+                    );
+                }}
+            />
+        </View>
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 16,
+        backgroundColor: '#fff',
+    },
+    tabsContainer: {
+        marginBottom: 16,
+    },
+    statContainer: {
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+    },
+    announcementText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 8,
+    },
+    dateText: {
+        fontSize: 14,
+        color: '#666',
+        marginBottom: 8,
+    },
+    iconRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    iconWithText: {
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    statText: {
+        fontSize: 16,
+        marginLeft: 8,
+    },
+    progressText: {
+        marginTop: 45,
+        fontSize: 14,
+        color: "#0072DA",
+        position: "absolute",
+    },
+    progressNum: {
+        marginTop: 25,
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: "#0072DA",
+        position: "absolute",
+    }
+});
+
+export default StatisticsScreen;
+
