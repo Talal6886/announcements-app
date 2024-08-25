@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
         elevation: 2,
         borderColor: '#E5E6E5',
         borderWidth: 1,
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.1,
         opacity:0.9
     },
     image: {
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
         padding: 8,
         width: '85%',
         fontSize: 22,
-        fontWeight: 'bold',
+        fontFamily:'IBMPlexSansBold',
         color: sharedColors.primaryColor,
     },
     description: {
@@ -113,17 +113,20 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginVertical: 4,
         color: '#4E5D6B',
+        fontFamily:'IBMPlexSansRegular',
     },
     showMore: {
         padding: 8,
         fontSize: 14,
         color: sharedColors.primaryColor,
         textAlign: 'center',
+        fontFamily:'IBMPlexSansRegular',
     },
     expireDate: {
         padding: 8,
         fontSize: 12,
         color: '#EF4A4A',
+        fontFamily:'IBMPlexSansSemiBold',
     },
     icons: {
         alignItems: 'center',

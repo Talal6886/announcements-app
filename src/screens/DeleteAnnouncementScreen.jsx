@@ -41,7 +41,9 @@ const DeleteAnnouncementScreen = () => {
                             </TouchableOpacity>
                         </View>
                     </View>
+
                 ))}
+
             </ScrollView>
             </View>
         </SafeAreaView>

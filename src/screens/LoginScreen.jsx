@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, {useState, useContext} from 'react';
 import {
     View,
     Text,
@@ -8,14 +8,14 @@ import {
     TouchableOpacity,
     SafeAreaView, ImageBackground, StatusBar
 } from 'react-native';
-import { AnnouncementsContext } from '@components/AnnouncementsContext';
+import {AnnouncementsContext} from '@components/AnnouncementsContext';
 import Icons from '@components/icons';
-import { screenHeight, screenWidth, sharedColors } from '@components/constants';
-import { Button } from '@components/buttons';
+import {screenHeight, screenWidth, sharedColors} from '@components/constants';
+import {Button} from '@components/buttons';
 import BGImage from '@assets/images/BGImage.png';
 import BottomImage from '@assets/images/BBGImage.png';
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({navigation}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showusername, setShowusername] = useState('');
@@ -23,8 +23,8 @@ const LoginScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
     const [isValidInput, setIsValidInput] = useState(true);
-    const { validUsers, setUser } = useContext(AnnouncementsContext);
-
+    const {validUsers, setUser} = useContext(AnnouncementsContext);
+    const inputChecked = username.length > 3 && password.length > 4
 
 
     const handleLogin = () => {
@@ -44,8 +44,7 @@ const LoginScreen = ({ navigation }) => {
             }, 300); // 0.3 seconds
         } else {
             alert('Invalid username or password');
-            setIsValidInput(username.length > 3 && password.length > 4);
-
+            setIsValidInput(inputChecked);
         }
     };
 
@@ -56,27 +55,40 @@ const LoginScreen = ({ navigation }) => {
     const toggleRememberMe = () => {
         setRememberMe(!rememberMe);
     };
+    const restInvalidText = () => {
+        setIsValidInput(true)
+    };
 
     return (
         <View style={styles.container}>
 
-            <ImageBackground source={BGImage} style={{position:'absolute', width: 400, height:400, top: -40, left: 0,right:0,bottom: 0,}}/>
-            <ImageBackground source={BottomImage} style={{position:'absolute', width: 400, height:400, top: 340, left: -30, }}/>
-            <Icons name={'anb'} width={60} height={60} style={{ position: 'absolute', top: 0, left: 25 }} />
+            <ImageBackground source={BGImage} style={{
+                position: 'absolute',
+                width: 400,
+                height: 400,
+                top: -40,
+                left: 0,
+                right: 0,
+                bottom: 0,
+            }}/>
+            <ImageBackground source={BottomImage}
+                             style={{position: 'absolute', width: 400, height: 400, top: 340, left: -30,}}/>
+            <Icons name={'anb'} width={60} height={60} style={{position: 'absolute', top: 0, left: 25}}/>
 
             <Text style={styles.titleWlc}>Welcome Back</Text>
-            <Text style={styles.titleName}>{showusername+" 🤩"}</Text>
+            <Text style={styles.titleName}>{showusername + " 🤩"}</Text>
 
             <View style={styles.card}>
                 {isValidInput ?
                     (<Text style={styles.textLogin}>Username</Text>)
-                : (<Text style={styles.textLoginError}>Invalid Username</Text>)
+                    : (<Text style={styles.textLoginError}>Invalid Username</Text>)
                 }
                 <TextInput
                     style={styles.input}
                     placeholder="Enter username"
                     value={username}
                     onChangeText={setUsername}
+                    onPress={restInvalidText}
 
 
                 />
@@ -91,6 +103,7 @@ const LoginScreen = ({ navigation }) => {
                         value={password}
                         onChangeText={setPassword}
                         secureTextEntry={!isPasswordVisible}
+                        onPress={restInvalidText}
                     />
                     <TouchableOpacity onPress={togglePasswordVisibility}>
                         <Icons
@@ -98,16 +111,16 @@ const LoginScreen = ({ navigation }) => {
                             width={25}
                             height={25}
                             fill={sharedColors.primaryColor}
-                            style={{ marginBottom: 16 }}
+                            style={{marginBottom: 16}}
                         />
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.rememberForgotContainer}>
                     <TouchableOpacity onPress={toggleRememberMe} style={styles.checkboxContainer}>
-                        <View style={[styles.square, { borderColor: rememberMe ? sharedColors.primaryColor : '#ccc' }]}>
+                        <View style={[styles.square, {borderColor: rememberMe ? sharedColors.primaryColor : '#ccc'}]}>
                             {rememberMe && (
-                                <Icons name={'Check'} width={15} height={15} fill={sharedColors.primaryColor} />
+                                <Icons name={'Check'} width={15} height={15} fill={sharedColors.primaryColor}/>
                             )}
                         </View>
                     </TouchableOpacity>
@@ -118,44 +131,55 @@ const LoginScreen = ({ navigation }) => {
                 </View>
 
                 {loading ? (
-                    <ActivityIndicator size="large" color={sharedColors.primaryColor} />
+                    <ActivityIndicator size="large" color={sharedColors.primaryColor}/>
                 ) : (
                     <Button
-                        style={styles.button}
+                        style={inputChecked ? styles.buttonActive : styles.buttonInactive}
                         textButton={"Log in"}
                         textStyle={styles.text}
                         onPress={handleLogin}
                     />
                 )}
-                <Button
-                    style={styles.buttonWithMPIN}
-                    textButton={"Login with MPIN"}
-                    textStyle={styles.textWithMPIN}
-                    //onPress={{}}
-                />
+
                 <View style={{borderColor: '#ccc', borderWidth: 0.5, width: '100%', marginTop: 16}}/>
                 <View style={styles.rowContainerCard}>
                     <View style={styles.columnContainer}>
                         <Text style={styles.questionText}>Existing customer ?</Text>
-                        <Text style={styles.registerOpenText}>Register Online</Text>
+                        <TouchableOpacity>
+                            <Text style={styles.registerOpenText}>Register Online</Text>
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.horizontalLine}/>
                     <View style={styles.columnContainer}>
                         <Text style={styles.questionText}>Want to join anb ?</Text>
-                        <Text style={styles.registerOpenText}>Open Account</Text>
+                        <TouchableOpacity>
+                            <Text style={styles.registerOpenText}>Open Account</Text>
+                        </TouchableOpacity>
                     </View>
+
+
                 </View>
             </View>
 
             <View style={styles.rowContainer}>
-                <Icons name={'ContactUs'} width={20} height={20} color={sharedColors.primaryColor} />
-                <Text>Contact Us</Text>
+                <>
+                <Icons name={'ContactUs'} width={20} height={20} color={sharedColors.primaryColor}/>
+                <TouchableOpacity>
+                    <Text style={styles.bottomOptions}>Contact Us</Text>
+                </TouchableOpacity>
+                    </>
                 <View style={styles.horizontalLine}/>
-                <Icons name={'AboutAnb'} width={20} height={20} color={sharedColors.primaryColor} />
-                <Text>About anb</Text>
+
+                <Icons name={'AboutAnb'} width={20} height={20} color={sharedColors.primaryColor}/>
+                <TouchableOpacity>
+                    <Text style={styles.bottomOptions}>About anb</Text>
+                </TouchableOpacity>
                 <View style={styles.horizontalLine}/>
-                <Icons name={'More'} width={20} height={20} color={sharedColors.primaryColor} />
-                <Text>More</Text>
+
+                <Icons name={'More'} width={20} height={20} color={sharedColors.primaryColor}/>
+                <TouchableOpacity>
+                    <Text style={styles.bottomOptions}>More</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -171,7 +195,7 @@ const styles = StyleSheet.create({
     },
     card: {
         width: 343,
-        height: 425,
+        height: 416,
         backgroundColor: "#fff",
         borderWidth: 1,
         borderColor: '#E5E6E5',
@@ -179,20 +203,27 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 16,
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.1,
+        shadowOffset:{
+            width: '5%',
+            height: '5%',
+        }
 
     },
     titleWlc: {
         fontSize: 20,
+        fontFamily:'IBMPlexSansRegular',
         position: 'absolute', top: 60, left: 25
     },
-    titleName:{
+    titleName: {
         fontSize: 20,
-        position: 'absolute', top: 60, left: 160,
-        fontWeight: '600',
+        fontFamily:'IBMPlexSansSemiBold',
+        position: 'absolute', top: 58.5, left: 163,
+
     },
     textLogin: {
-        fontSize: 14,
+        fontSize: 15,
+        fontFamily:'IBMPlexSansRegular',
         alignSelf: 'flex-start',
         marginBottom: 4,
         paddingHorizontal: 16,
@@ -207,6 +238,7 @@ const styles = StyleSheet.create({
     },
     input: {
         height: 40,
+        fontFamily:'IBMPlexSansBold',
         borderColor: '#fff',
         borderWidth: 1,
         marginBottom: 32,
@@ -228,7 +260,7 @@ const styles = StyleSheet.create({
     passwordInput: {
         flex: 1,
         height: 40,
-        fontWeight: 'bold',
+        fontFamily:'IBMPlexSansBold',
     },
     rememberForgotContainer: {
         flexDirection: 'row',
@@ -239,21 +271,23 @@ const styles = StyleSheet.create({
     rememberMeText: {
         color: '#000',
         fontSize: 14,
+        fontFamily:'IBMPlexSansRegular',
     },
     forgotText: {
         marginLeft: 45,
         color: sharedColors.primaryColor,
-        fontWeight: 'bold',
+        fontFamily:'IBMPlexSansBold',
     },
     registerOpenText: {
         color: sharedColors.primaryColor,
-        fontWeight: 'bold',
+        fontFamily:'IBMPlexSansBold',
     },
     questionText: {
         color: '#4E5D6B',
         paddingBottom: 16,
+        fontFamily:'IBMPlexSansRegular',
     },
-    button: {
+    buttonActive: {
         alignItems: 'center',
         width: 0.85 * screenWidth,
         height: 0.055 * screenHeight,
@@ -261,25 +295,22 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: sharedColors.primaryColor,
     },
-    buttonWithMPIN: {
+    buttonInactive: {
         alignItems: 'center',
         width: 0.85 * screenWidth,
-        height: 0.035 * screenHeight,
-        marginTop: 16,
+        height: 0.055 * screenHeight,
+        marginTop: 5,
+        marginBottom: 16,
         borderRadius: 8,
-        backgroundColor: '#fff',
+        backgroundColor: sharedColors.primaryColor,
+        opacity: 0.5,
     },
-    textWithMPIN: {
-        fontSize: 15,
-        fontWeight: 'bold',
-        color: sharedColors.primaryColor,
-        padding: 9,
-    },
+
     text: {
-        fontSize: 15,
-        fontWeight: 'bold',
+        fontSize: 16,
+        fontFamily:'IBMPlexSansBold',
         color: '#fff',
-        padding: 12.5,
+        padding: 11,
     },
     square: {
         width: 24,
@@ -310,22 +341,25 @@ const styles = StyleSheet.create({
         width: '100%',
         marginTop: 16,
     },
-    columnContainer:{
+    columnContainer: {
         flexDirection: 'column',
-        marginHorizontal:16,
+        marginHorizontal: 16,
         alignItems: 'center',
     },
-    horizontalLine:{
+    horizontalLine: {
         borderColor: '#ccc',
-        borderWidth:0.5,
-        marginHorizontal:4,
+        borderWidth: 0.5,
+        marginHorizontal: 4,
         height: 30,
-        alignSelf:'center'
+        alignSelf: 'center'
     },
-    verticalLine:{
+    verticalLine: {
         borderColor: '#ccc',
-        borderWidth:0.5,
-        marginHorizontal:4,
+        borderWidth: 0.5,
+        marginHorizontal: 4,
+    },
+    bottomOptions:{
+        fontFamily:'IBMPlexSansRegular',
     }
 });
 

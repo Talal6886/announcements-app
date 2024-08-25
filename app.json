@@ -13,11 +13,12 @@
     },
     "plugins": [
       [
-        "expo-image-picker",
+        "expo-font",
         {
-          "photosPermission": "The app accesses your photos to let you share them with your friends."
+          "fonts": ["./assets/fonts/IBMPlexSans-Bold.ttf"]
         }
-      ]
+      ],
+      "expo-font"
     ],
     "ios": {
       "supportsTablet": true

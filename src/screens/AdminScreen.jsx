@@ -6,7 +6,7 @@ import {
     StyleSheet,
     ScrollView,
     SafeAreaView,
-    Platform, KeyboardAvoidingView
+    Platform, KeyboardAvoidingView, Alert
 } from 'react-native';
 import {Tabs} from '@components/Tabs';
 import {AnnouncementsContext} from '@components/AnnouncementsContext';
@@ -40,6 +40,7 @@ const AdminScreen = ({navigation}) => {
         setDescription('');
         setExpiryDate('');
         setImage(null);
+        Alert.alert("added announcement");
     };
 
 
@@ -90,6 +91,7 @@ const AdminScreen = ({navigation}) => {
                             markedDates={{
                                 [expiryDate]: {selected: true, marked: true, selectedColor: 'blue'},
                             }}
+
                         />
 
                         <Text style={styles.dateText}>Expiry Date: {expiryDate}</Text>

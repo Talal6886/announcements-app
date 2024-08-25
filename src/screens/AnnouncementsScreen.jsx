@@ -98,7 +98,7 @@ const AnnouncementsScreen = () => {
                                     title={item.title}
                                     description={item.description}
                                     remainingDays={calculateRemainingDays(item.expiryDate)}
-                                    expireDate={new Date(item.expiryDate).toLocaleDateString("en-US")}
+                                    expireDate={new Date(item.expiryDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
                                     image={item.image}
                                     pinned={userPins.includes(item.id)}
                                     onPinPress={() => handlePinPress(item.id)}
@@ -108,13 +108,10 @@ const AnnouncementsScreen = () => {
                             </View>
                         )}
                         keyExtractor={(item) => item.id.toString()}
-                        ItemSeparatorComponent={<View style={{ height: 16 }} />}
                         ListEmptyComponent={emptyMessage}
                         ListHeaderComponent={
                             <View>
-
                                 <View style={styles.searchBarContainer}>
-
                                     <Icons
                                         name={'search'}
                                         width={20}
@@ -152,9 +149,9 @@ const emptyMessage = () => {
     return (
         <View style={styles.container}>
             <Icons name={'NoResults'} width={150} height={150} fill={sharedColors.primaryColor} style={{ position: 'absolute', top: 100, left: 100 }} />
-            <View style={{ position: 'absolute', top: 275, left: 20 }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 20 }}>No Results!</Text>
-                <Text style={{ fontSize: 15 }}>No announcements found.</Text>
+            <View style={{ position: 'absolute', top: 275, left: 100, }}>
+                <Text style={{ fontWeight: 'bold', fontSize: 20,fontFamily:'IBMPlexSansBold' }}>No Results!</Text>
+                <Text style={{ fontSize: 15, fontFamily:'IBMPlexSansSemiBold' }}>No announcements found.</Text>
             </View>
         </View>
     );
@@ -178,7 +175,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderColor: sharedColors.primaryColor,
         borderWidth: 1,
-        borderRadius: 8,
+        borderRadius: 64,
         paddingHorizontal: 8,
         marginBottom: 16,
         height: 40,
@@ -195,6 +192,7 @@ const styles = StyleSheet.create({
     },
     itemsContainer: {
         flexGrow: 1,
+        marginBottom:16
     },
 });
 

@@ -42,15 +42,12 @@ const styles = StyleSheet.create({
     borderColor: sharedColors.primaryColor,
     marginVertical: 5,
     backgroundColor: "#fff",
-    borderRadius: 8,
+    borderRadius: 64,
     marginBottom: 16,
-    shadowOpacity:0.2,
-
-
   },
   switchButton: {
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 64,
     width: 90, // Consistent width
     height: 0.044 * screenHeight,
     alignItems: "center",
@@ -64,7 +61,7 @@ const styles = StyleSheet.create({
   switchButtonText: {
     fontSize: 13,
     color: 'black',
-    fontWeight: "bold",
+    fontFamily:'IBMPlexSansSemiBold',
   },
   activeText: {
     color: sharedColors.primaryColor, // Active text color

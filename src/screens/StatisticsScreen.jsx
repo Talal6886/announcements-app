@@ -36,7 +36,7 @@ const StatisticsScreen = () => {
                     const { checkedCount, uncheckedCount } = getAnnouncementStats(item);
                     const totalCount = uncheckedCount + checkedCount;
                     const progress = checkedCount / totalCount;
-                    const formattedAddDate = new Date(item.id).toLocaleDateString("en-US"); // Assuming id is a timestamp
+                    const formattedAddDate = new Date(item.id).toLocaleDateString("en-US");
                     const formattedExpireDate = new Date(item.expiryDate).toLocaleDateString("en-US");
 
                     return (
