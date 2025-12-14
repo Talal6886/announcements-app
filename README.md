@@ -1,4 +1,4 @@
-<img width="392" height="812" alt="image" src="https://github.com/user-attachments/assets/93006ac3-2e46-4024-924c-b2fa2541558c" /># 📢 Employee Announcements App
+# 📢 Employee Announcements App
 
 A comprehensive mobile application for managing internal company announcements with role-based access control.
 
